@@ -1,5 +1,6 @@
 etcdir = ${sysconfdir}
 dist_etc_DATA = hostapd.conf
+dist_etc_DATA += hostapd-wlan1.conf
 dist_etc_DATA += sta_mode_hostapd.conf
 dist_etc_DATA += wpa_supplicant.conf
 
