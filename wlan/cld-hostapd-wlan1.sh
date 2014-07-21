@@ -27,9 +27,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Enable these to override default cld ini params for SAP interface on wlan1
 
-iwpriv wlan1 setConfig gAPChannelSelectStartChannel=1
-iwpriv wlan1 setConfig gAPChannelSelectEndChannel=11
-iwpriv wlan1 setConfig gAPChannelSelectOperatingBand=0
-iwpriv wlan1 setConfig gApAutoChannelSelection=1
-iwpriv wlan1 setConfig gSapDot11Mode=0
+#iwpriv wlan1 setConfig gAPChannelSelectStartChannel=1
+#iwpriv wlan1 setConfig gAPChannelSelectEndChannel=11
+#iwpriv wlan1 setConfig gAPChannelSelectOperatingBand=0
+#iwpriv wlan1 setConfig gApAutoChannelSelection=1
+#iwpriv wlan1 setConfig gSapDot11Mode=0
+
