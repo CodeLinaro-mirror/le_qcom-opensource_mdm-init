@@ -38,7 +38,7 @@ do_ctrl_cld_ll () {
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
-        if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
+        if [ "$1" == "sta,ap" ]; then
             start_ap1=1
             shift
         elif [ "$1" == "ap" ]; then
@@ -47,8 +47,12 @@ do_ctrl_cld_ll () {
             return 1
         fi
 
+        echo wlan-qcacld-platform > /sys/bus/platform/drivers/wlan-qcacld-platform/bind
+        echo 1 > /sys/devices/platform/msm_sdcc.2/polling
         set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
+        insmod $MODULE_BASE/updates/compat/compat.ko
+        insmod $MODULE_BASE/updates/net/wireless/cfg80211.ko
+        insmod $MODULE_BASE/updates/drivers/staging/qcacld-2.0/wlan.ko $@
         set +e
 
         c=1
@@ -63,9 +67,11 @@ do_ctrl_cld_ll () {
 
         if [ $c -gt $RETRY_LIMIT ]; then
             echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
+            echo 0 > /sys/devices/platform/msm_sdcc.2/polling
             exit 1
         fi
 
+        echo 0 > /sys/devices/platform/msm_sdcc.2/polling
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
             iw dev wlan0 interface add wlan1 type __ap
@@ -80,6 +86,12 @@ do_ctrl_cld_ll () {
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
         rmmod wlan
+        rmmod cfg80211
+        rmmod compat
+        echo 1 > /sys/devices/platform/msm_sdcc.2/polling
+        echo wlan-qcacld-platform > /sys/bus/platform/drivers/wlan-qcacld-platform/unbind
+        sleep 1
+        echo 0 > /sys/devices/platform/msm_sdcc.2/polling
         ;;
 
     restart)
