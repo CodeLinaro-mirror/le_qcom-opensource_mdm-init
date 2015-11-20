@@ -5,7 +5,7 @@ dist_etc_DATA = sysctl.conf
 
 ACLOCAL_AMFLAGS = -I m4
 
-if IS_MDMFERMIUM
+if IS_MDM9607
 dirs = wlan_sdio
 else
 dirs = wlan

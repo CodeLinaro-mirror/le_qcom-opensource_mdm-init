@@ -27,17 +27,17 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
-AC_ARG_ENABLE([target-mdmfermium],
-	AC_HELP_STRING([--enable-target-mdmfermium],
-		[Enable conditional compile for target mdmfermium]),
-	[target_mdmfermium="${enableval}"],
-	target_mdmfermium=no)
+AC_ARG_ENABLE([target-mdm9607],
+	AC_HELP_STRING([--enable-target-mdm9607],
+		[Enable conditional compile for target mdm9607]),
+	[target_mdm9607="${enableval}"],
+	target_mdm9607=no)
 
-AM_CONDITIONAL([IS_MDMFERMIUM], [test "x$target_mdmfermium" = xyes])
+AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
-AM_COND_IF([IS_MDMFERMIUM],
+AM_COND_IF([IS_MDM9607],
 	[AC_CONFIG_FILES([wlan_sdio/Makefile])],
 	[AC_CONFIG_FILES([wlan/Makefile])])
 AC_OUTPUT
