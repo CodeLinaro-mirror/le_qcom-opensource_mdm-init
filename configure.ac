@@ -32,12 +32,23 @@ AC_ARG_ENABLE([target-mdm9607],
 		[Enable conditional compile for target mdm9607]),
 	[target_mdm9607="${enableval}"],
 	target_mdm9607=no)
+AC_ARG_ENABLE([target-apq8009],
+	AC_HELP_STRING([--enable-target-apq8009],
+		[Enable conditional compile for target apq8009]),
+	[target_apq8009="${enableval}"],
+	target_apq8009=no)
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
+
+AM_CONDITIONAL([IS_APQ8009], [test "x$target_apq8009" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
 AM_COND_IF([IS_MDM9607],
 	[AC_CONFIG_FILES([wlan_sdio/Makefile])],
 	[AC_CONFIG_FILES([wlan/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_APQ8009],
+	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
 AC_OUTPUT
