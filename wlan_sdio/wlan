@@ -51,8 +51,6 @@ do_ctrl_cld_ll () {
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
 
-        echo Y > /sys/module/lpm_levels/parameters/sleep_disabled
-
         c=1
         ifconfig wlan0 up 2>  /dev/null
         rc=$?
@@ -82,7 +80,6 @@ do_ctrl_cld_ll () {
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
         rmmod wlan
-        echo N > /sys/module/lpm_levels/parameters/sleep_disabled
         ;;
 
     restart)
