@@ -47,9 +47,14 @@ do_ctrl_cld_ll () {
         elif [ "$1" == "ap,sta" ]; then
             return 1
         fi
-
+	if [ -f /persist/wlan_mac ]; then
+	    macaddress=`cat /persist/wlan_mac`
+	    if [ -f /sys/devices/soc.0/a000000.qcom,wcnss-wlan/wcnss_mac_addr ]; then
+		echo  $macaddress > /sys/devices/soc.0/a000000.qcom,wcnss-wlan/wcnss_mac_addr
+            fi
+        fi
         if [ -f /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number ]; then
-                echo $serialno > /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number
+            echo $serialno > /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number
         fi
 
         set -e
