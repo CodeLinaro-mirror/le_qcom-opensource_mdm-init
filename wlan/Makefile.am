@@ -11,3 +11,16 @@ dist_init_d_SCRIPTS = wlan
 
 firmware_ddir = ${base_libdir}/firmware/wlan/qca_cld
 dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
+
+if IS_MDMCALIFORNIUM
+
+# Copy WCNSS_qcom_cfg.sdio.in to ../firmware/wlan/qca_cld/qca9377/
+firmware_qca9377dir = ${base_libdir}/firmware/wlan/qca_cld/qca9377
+dist_firmware_qca9377_DATA = WCNSS_qcom_cfg.sdio.ini
+
+# Rename WCNSS_qcom_cfg.sdio.ini to WCNSS_qcom_cfg.ini
+install-data-hook:$(DESTDIR)$(firmware_qca9377dir)/WCNSS_qcom_cfg.sdio.ini
+	cd $(DESTDIR)$(firmware_qca9377dir) && \
+		mv -f WCNSS_qcom_cfg.sdio.ini WCNSS_qcom_cfg.ini
+
+endif
