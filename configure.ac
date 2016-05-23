@@ -37,18 +37,31 @@ AC_ARG_ENABLE([target-apq8009],
 		[Enable conditional compile for target apq8009]),
 	[target_apq8009="${enableval}"],
 	target_apq8009=no)
+AC_ARG_ENABLE([target-apq8009-rome],
+       AC_HELP_STRING([--enable-target-apq8009-rome],
+               [Enable conditional compile for target apq8009, rome SDIO based]),
+       [target_apq8009_rome="${enableval}"],
+       target_apq8009_rome=no)
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8009], [test "x$target_apq8009" = xyes])
 
+AM_CONDITIONAL([IS_APQ8009_ROME], [test "x$target_apq8009_rome" = xyes])
+
 AC_CONFIG_FILES([Makefile])
 
-AM_COND_IF([IS_MDM9607],
-	[AC_CONFIG_FILES([wlan_sdio/Makefile])],
-	[AC_CONFIG_FILES([wlan/Makefile])])
-AC_OUTPUT
+if (test "x${target_apq8009}" = "xyes"); then
+    if (test "x${target_apq8009_rome}" = "xyes"); then
+        AC_CONFIG_FILES([wlan_rome/Makefile])
+    else
+           AC_CONFIG_FILES([wlan_pronto/Makefile])
+    fi
+else
+    if (test "x${target_mdm9607}" = "xyes"); then
+        AC_CONFIG_FILES([wlan_sdio/Makefile])
+        AC_CONFIG_FILES([wlan/Makefile])
+    fi
+fi
 
-AM_COND_IF([IS_APQ8009],
-	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
 AC_OUTPUT
