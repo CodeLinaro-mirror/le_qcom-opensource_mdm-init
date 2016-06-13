@@ -8,7 +8,7 @@ ACLOCAL_AMFLAGS = -I m4
 if IS_MDM9607
 dirs = wlan_sdio
 else
-if IS_APQ8009
+if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
 dirs = wlan

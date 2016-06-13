@@ -39,17 +39,17 @@ AC_ARG_ENABLE([target-mdmcalifornium],
 	[target_mdmcalifornium="${enableval}"],
 	target_mdmcalifornium=no)
 
-AC_ARG_ENABLE([target-apq8009],
-	AC_HELP_STRING([--enable-target-apq8009],
-		[Enable conditional compile for target apq8009]),
-	[target_apq8009="${enableval}"],
-	target_apq8009=no)
+AC_ARG_ENABLE([pronto-wlan],
+	AC_HELP_STRING([--enable-pronto-wlan],
+		[Enable pronto wlan compile for targets that support Pronto]),
+	[pronto_wlan="${enableval}"],
+	pronto_wlan=no)
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
 
-AM_CONDITIONAL([IS_APQ8009], [test "x$target_apq8009" = xyes])
+AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -58,6 +58,6 @@ AM_COND_IF([IS_MDM9607],
 	[AC_CONFIG_FILES([wlan/Makefile])])
 AC_OUTPUT
 
-AM_COND_IF([IS_APQ8009],
+AM_COND_IF([IS_PRONTO_ENABLED],
 	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
 AC_OUTPUT
