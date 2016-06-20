@@ -88,7 +88,8 @@ do_ctrl_cld_ll () {
         ;;
 
     start_ftm)
-        do_ctrl_cld_ll start con_mode=5
+        echo "Starting Pronto WLAN in FTM Mode ..." > $DUMP_TO_KMSG
+        insmod $MODULE_BASE/extra/wlan.ko con_mode=5
         ;;
 
     stop)
