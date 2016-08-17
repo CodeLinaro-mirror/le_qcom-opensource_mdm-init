@@ -11,7 +11,7 @@ else
 if IS_APQ8009_ROME
 dirs = wlan_rome
 else
-if IS_APQ8009
+if IS_WLAN_PRONTO
 dirs = wlan_pronto
 else
 dirs = wlan
