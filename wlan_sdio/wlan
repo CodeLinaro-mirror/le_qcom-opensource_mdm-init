@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+# Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -29,7 +29,7 @@
 
 export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=3
-HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
+HELP="Usage $0 {start | stop | restart} <ap | sta,ap | ap,ap| ap,ap,ap,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
 do_ctrl_cld_ll () {
@@ -38,7 +38,11 @@ do_ctrl_cld_ll () {
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
-        if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
+        start_4ap=0
+        if [ "$1" == "ap,ap,ap,ap" ]; then
+            start_4ap=1
+            shift
+        elif [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
             start_ap1=1
             shift
         elif [ "$1" == "ap" ]; then
@@ -70,6 +74,19 @@ do_ctrl_cld_ll () {
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
             iw dev wlan0 interface add wlan1 type __ap
             ifconfig wlan1 up 2> /dev/null
+        fi
+        if [ $start_4ap -eq 1 ]; then
+            echo "Adding AP interface(wlan1)" > $DUMP_TO_KMSG
+            iw dev wlan0 interface add wlan1 type __ap
+            ifconfig wlan1 up 2> /dev/null
+
+            echo "Adding AP interface(wlan2)" > $DUMP_TO_KMSG
+            iw dev wlan0 interface add wlan2 type __ap
+            ifconfig wlan2 up 2> /dev/null
+
+            echo "Adding AP interface(wlan3)" > $DUMP_TO_KMSG
+            iw dev wlan0 interface add wlan3 type __ap
+            ifconfig wlan3 up 2> /dev/null
         fi
         ;;
 
