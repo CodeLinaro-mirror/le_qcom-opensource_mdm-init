@@ -5,13 +5,17 @@ dist_etc_DATA = sysctl.conf
 
 ACLOCAL_AMFLAGS = -I m4
 
-if IS_MDM9607
-dirs = wlan_sdio
+if IS_DRONE
+dirs = wlan_drone
 else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
+if IS_MDM9607
+dirs = wlan_sdio
+else
 dirs = wlan
+endif
 endif
 endif
 
