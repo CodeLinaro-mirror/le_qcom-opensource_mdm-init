@@ -45,32 +45,19 @@ AC_ARG_ENABLE([pronto-wlan],
 	[pronto_wlan="${enableval}"],
 	pronto_wlan=no)
 
-AC_ARG_ENABLE([drone-wlan],
-	AC_HELP_STRING([--enable-drone-wlan],
-		[Enable drone wlan compile for targets that support drone]),
-	[drone_wlan="${enableval}"],
-	drone_wlan=no)
-
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
-AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
-
 AC_CONFIG_FILES([Makefile])
 
-if (test "x${drone_wlan}" = "xyes"); then
-    AC_CONFIG_FILES([wlan_drone/Makefile])
-else
-	if (test "x${pronto_wlan}" = "xyes"); then
-		AC_CONFIG_FILES([wlan_pronto/Makefile])
-	else
-		if (test "x${target_mdm9607}" = "xyes"); then
-			AC_CONFIG_FILES([wlan_sdio/Makefile])
-		        AC_CONFIG_FILES([wlan/Makefile])
-		fi
-	fi
-fi
+AM_COND_IF([IS_MDM9607],
+	[AC_CONFIG_FILES([wlan_sdio/Makefile])],
+	[AC_CONFIG_FILES([wlan/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_PRONTO_ENABLED],
+	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
 AC_OUTPUT
