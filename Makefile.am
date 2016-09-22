@@ -11,7 +11,11 @@ else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
+if IS_DRONE
+dirs = wlan_drone
+else
 dirs = wlan
+endif
 endif
 endif
 
