@@ -57,6 +57,9 @@ do_ctrl_cld_ll () {
             echo $serialno > /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number
         fi
 
+        echo "Starting PTT Socket App... $@" > $DUMP_TO_KMSG
+        /usr/bin/ptt_socket_app -d &
+
         set -e
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
