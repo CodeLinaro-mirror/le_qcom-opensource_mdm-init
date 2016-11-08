@@ -65,7 +65,7 @@ do_ctrl_cld_ll () {
         set +e
 
         echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
-        wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf &
+        wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
         /usr/sbin/dhcpcd wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b
 
         c=1
