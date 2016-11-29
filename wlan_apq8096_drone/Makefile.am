@@ -8,6 +8,7 @@ dist_etc_DATA += cld-hostapd-wlan1.sh
 
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = wlan
+dist_init_d_SCRIPTS += wlan_sta
 
-firmware_ddir = ${base_libdir}/firmware/wlan/qca_cld
+firmware_ddir = ${nonarch_base_libdir}/firmware/wlan/qca_cld
 dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
