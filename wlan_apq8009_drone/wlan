@@ -68,7 +68,7 @@ do_ctrl_cld_ll () {
         fi
 
         echo "Starting hostapd and DNS server" > $DUMP_TO_KMSG
-        hostapd /etc/hostapd.conf &
+        hostapd /data/misc/wifi/hostapd.conf &
         ifconfig wlan0 192.168.1.1 netmask 255.255.255.0 up
         killall -9 dnsmasq
         dnsmasq -i wlan0 --dhcp-range=192.168.1.10,192.168.1.100,12h
