@@ -14,10 +14,14 @@ else
 if IS_APQ8009_DRONE
 dirs = wlan_apq8009_drone
 else
+if IS_APQ8017_SNAP
+dirs = wlan_apq8017_snap
+else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
 dirs = wlan
+endif
 endif
 endif
 endif
