@@ -5,11 +5,11 @@ dist_etc_DATA += sta_mode_hostapd.conf
 dist_etc_DATA += wpa_supplicant.conf
 dist_etc_DATA += cld-hostapd-wlan0.sh
 dist_etc_DATA += cld-hostapd-wlan1.sh
-dist_etc_DATA += wlan
 dist_etc_DATA += FIRST_BOOT.flag
 
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = ipc-startup.sh
+dist_init_d_SCRIPTS += wlan
 
 
 firmware_ddir = ${base_libdir}/firmware/wlan/qca_cld
