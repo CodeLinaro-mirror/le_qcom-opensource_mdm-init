@@ -33,11 +33,29 @@ AC_ARG_ENABLE([target-mdm9607],
 	[target_mdm9607="${enableval}"],
 	target_mdm9607=no)
 
+AC_ARG_ENABLE([target-apq8096],
+	AC_HELP_STRING([--enable-target-apq8096],
+		[Enable conditional compile for target apq8096]),
+	[target_apq8096="${enableval}"],
+	target_apq8096=no)
+
+AC_ARG_ENABLE([target-apq8009],
+	AC_HELP_STRING([--enable-target-apq8009],
+		[Enable conditional compile for target apq8009]),
+	[target_apq8009="${enableval}"],
+	target_apq8009=no)
+
 AC_ARG_ENABLE([target-mdmcalifornium],
 	AC_HELP_STRING([--enable-target-mdmcalifornium],
 		[Enable conditional compile for target mdmcalifornium]),
 	[target_mdmcalifornium="${enableval}"],
 	target_mdmcalifornium=no)
+
+AC_ARG_ENABLE([target-apq8017],
+	AC_HELP_STRING([--enable-target-apq8017],
+		[Enable conditional compile for target apq80017]),
+	[target_apq8017="${enableval}"],
+	target_apq8017=no)
 
 AC_ARG_ENABLE([pronto-wlan],
 	AC_HELP_STRING([--enable-pronto-wlan],
@@ -51,13 +69,31 @@ AC_ARG_ENABLE([drone-wlan],
 	[drone_wlan="${enableval}"],
 	drone_wlan=no)
 
+AC_ARG_ENABLE([snap-wlan],
+	AC_HELP_STRING([--enable-snap-wlan],
+		[Enable snap wlan compile for targets that support snap]),
+	[snap_wlan="${enableval}"],
+	snap_wlan=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
-AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
+if (test "x${drone_wlan}" = "xyes"); then
+	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$target_apq8096" = xyes])
+	AM_CONDITIONAL([IS_APQ8009_DRONE], [test "x$target_apq8009" = xyes])
+else
+	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$drone_wlan" = xyes])
+	AM_CONDITIONAL([IS_APQ8009_DRONE], [test "x$drone_wlan" = xyes])
+fi
+
+if (test "x${snap_wlan}" = "xyes"); then
+	AM_CONDITIONAL([IS_APQ8017_SNAP], [test "x$target_apq8017" = xyes])
+else
+	AM_CONDITIONAL([IS_APQ8017_SNAP], [test "x$snap_wlan" = xyes])
+fi
 
 AC_CONFIG_FILES([Makefile])
 
@@ -70,6 +106,14 @@ AM_COND_IF([IS_PRONTO_ENABLED],
 	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
 AC_OUTPUT
 
-AM_COND_IF([IS_DRONE],
-	[AC_CONFIG_FILES([wlan_drone/Makefile])])
+AM_COND_IF([IS_APQ8096_DRONE],
+	[AC_CONFIG_FILES([wlan_apq8096_drone/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_APQ8009_DRONE],
+	[AC_CONFIG_FILES([wlan_apq8009_drone/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_APQ8017_SNAP],
+	[AC_CONFIG_FILES([wlan_apq8017_snap/Makefile])])
 AC_OUTPUT
