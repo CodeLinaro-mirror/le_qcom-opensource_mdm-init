@@ -115,6 +115,9 @@ do_ctrl_cld_ll () {
 
     return 0
 }
+echo "Starting cnss_diag by default" > $DUMP_TO_KMSG
+
+/usr/bin/cnss_diag -q -f &
 
 do_ctrl_cld_ll $@
 if [ $? -ne 0 ]; then
