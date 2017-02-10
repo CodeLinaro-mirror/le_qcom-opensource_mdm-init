@@ -67,11 +67,23 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
-        echo "Starting hostapd and DNS server" > $DUMP_TO_KMSG
+        echo "Starting hostapd and DHCP server" > $DUMP_TO_KMSG
         hostapd /data/misc/wifi/hostapd.conf &
         ifconfig wlan0 192.168.1.1 netmask 255.255.255.0 up
         killall -9 dnsmasq
         dnsmasq -i wlan0 --dhcp-range=192.168.1.10,192.168.1.100,12h
+
+        c=1
+        while [ $c -le 2000 ]; do
+            ps -e | grep 'dnsmasq -i wlan0 --dhcp-range=192.168.1.10,192.168.1.100,12h'|grep -v grep
+            if [ $? -ne 0 ]; then
+                echo "DHCP server was killed" > $DUMP_TO_KMSG
+                killall -9 dnsmasq
+                dnsmasq -i wlan0 --dhcp-range=192.168.1.10,192.168.1.100,12h
+            fi
+            c=`expr $c + 1`
+            sleep 0.005
+        done
 
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
