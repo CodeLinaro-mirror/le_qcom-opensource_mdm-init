@@ -77,7 +77,7 @@ AC_ARG_ENABLE([snap-wlan],
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
-AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdm9650" = xyes])
+AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
