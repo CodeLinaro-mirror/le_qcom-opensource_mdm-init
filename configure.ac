@@ -81,6 +81,13 @@ AC_ARG_ENABLE([target-sdxhedgehog],
        [target_sdxhedgehog="${enableval}"],
        target_sdxhedgehog=no)
 
+AC_ARG_ENABLE([ipc-wlan],
+	AC_HELP_STRING([--enable-ipc-wlan],
+		[Enable ipc wlan compile for targets that support ipc]),
+	[ipc_wlan="${enableval}"],
+	ipc_wlan=no)
+
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdxhedgehog" = xyes -o "x$target_mdm9650" = xyes])
@@ -100,6 +107,7 @@ if (test "x${snap_wlan}" = "xyes"); then
 else
 	AM_CONDITIONAL([IS_APQ8017_SNAP], [test "x$snap_wlan" = xyes])
 fi
+AM_CONDITIONAL([IS_IPC], [test "x$ipc_wlan" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -122,4 +130,6 @@ AC_OUTPUT
 
 AM_COND_IF([IS_APQ8017_SNAP],
 	[AC_CONFIG_FILES([wlan_apq8017_snap/Makefile])])
+AM_COND_IF([IS_IPC],
+	[AC_CONFIG_FILES([wlan_ipc/Makefile])])
 AC_OUTPUT

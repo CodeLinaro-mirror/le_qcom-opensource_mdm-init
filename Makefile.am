@@ -20,7 +20,11 @@ else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
+if IS_IPC
+dirs = wlan_ipc
+else
 dirs = wlan
+endif
 endif
 endif
 endif
