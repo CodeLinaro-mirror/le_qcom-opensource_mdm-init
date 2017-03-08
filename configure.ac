@@ -75,9 +75,15 @@ AC_ARG_ENABLE([snap-wlan],
 	[snap_wlan="${enableval}"],
 	snap_wlan=no)
 
+AC_ARG_ENABLE([target-sdxhedgehog],
+       AC_HELP_STRING([--enable-target-sdxhedgehog],
+               [Enable conditional compile for target sdxhedgehog]),
+       [target_sdxhedgehog="${enableval}"],
+       target_sdxhedgehog=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
-AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdm9650" = xyes])
+AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdxhedgehog" = xyes -o "x$target_mdm9650" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
