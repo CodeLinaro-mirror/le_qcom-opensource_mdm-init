@@ -33,11 +33,11 @@ AC_ARG_ENABLE([target-mdm9607],
 	[target_mdm9607="${enableval}"],
 	target_mdm9607=no)
 
-AC_ARG_ENABLE([target-mdmcalifornium],
-	AC_HELP_STRING([--enable-target-mdmcalifornium],
-		[Enable conditional compile for target mdmcalifornium]),
-	[target_mdmcalifornium="${enableval}"],
-	target_mdmcalifornium=no)
+AC_ARG_ENABLE([target-mdm9650],
+	AC_HELP_STRING([--enable-target-mdm9650],
+		[Enable conditional compile for target mdm9650]),
+	[target_mdm9650="${enableval}"],
+	target_mdm9650=no)
 
 AC_ARG_ENABLE([pronto-wlan],
 	AC_HELP_STRING([--enable-pronto-wlan],
@@ -53,7 +53,7 @@ AC_ARG_ENABLE([drone-wlan],
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
-AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
+AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
