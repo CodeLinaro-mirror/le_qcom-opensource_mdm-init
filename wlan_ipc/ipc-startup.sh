@@ -1,7 +1,7 @@
 #!/bin/sh
 
 DUMP_TO_KMSG=/dev/kmsg
-flag_file="/etc/FIRST_BOOT.flag"
+flag_file="/data/misc/wifi/FIRST_BOOT.flag"
 
 mac=`cat /sys/class/net/wlan0/address`
 var1=`echo $mac|cut -d: -f4| tr '[a-z]' '[A-Z]'`
@@ -11,11 +11,11 @@ ssid=${var1}${var2}${var3}
 
 if [ -f "$flag_file" ]; then
     rm $flag_file
-    sed -i "s/^ssid=.*/ssid=IPC8053_$ssid/" /etc/hostapd.conf
+    sed -i "s/^ssid=.*/ssid=IPC8053_$ssid/" /data/misc/wifi/hostapd.conf
     sync
 fi
 
-/usr/sbin/hostapd -B -P /var/run/hostapd.wlan0.pid /etc/hostapd.conf
+/usr/sbin/hostapd -B -P /var/run/hostapd.wlan0.pid /data/misc/wifi/hostapd.conf
 
 /sbin/brctl addbr br0
 ifconfig eth0 down

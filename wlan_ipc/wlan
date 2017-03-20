@@ -60,7 +60,9 @@ do_ctrl_cld_ll () {
         echo "Starting PTT Socket App... $@" > $DUMP_TO_KMSG
         /usr/bin/ptt_socket_app -d &
 
+        set -e
         insmod $MODULE_BASE/extra/wlan.ko $@
+        set +e
 
         #echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
         #wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf &
