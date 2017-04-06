@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2013, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -27,45 +27,25 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#It is for APQ8098 mediabox
+
 export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=3
-HELP="Usage $0 {start | stop | restart} <sta>"
+HELP="Usage $0 {start | stop | restart} <ap | sta>"
 DUMP_TO_KMSG=/dev/kmsg
-serialno=`cat /sys/devices/virtual/android_usb/android0/iSerial`
 
-do_ctrl_cld_ll () {
+do_ctrl_ath10k() {
     case "$1" in
     start)
-        echo "Starting Pronto WLAN... $@" > $DUMP_TO_KMSG
+        echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
-        start_sta=0
-        if [ "$1" == "sta" ]; then
-            start_sta=1
-        fi
-	if [ -f /persist/wlan_mac ]; then
-	    macaddress=`cat /persist/wlan_mac`
-	    if [ -f /sys/devices/soc.0/a000000.qcom,wcnss-wlan/wcnss_mac_addr ]; then
-		echo  $macaddress > /sys/devices/soc.0/a000000.qcom,wcnss-wlan/wcnss_mac_addr
-	    elif [ -f /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/wcnss_mac_addr]; then
-		echo  $macaddress > /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/wcnss_mac_addr
-            fi
-        fi
-        if [ -f /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number ]; then
-            echo $serialno > /sys/bus/platform/drivers/wcnss_wlan/a000000.qcom,wcnss-wlan/serial_number
-        fi
-
-        echo "Starting PTT Socket App... $@" > $DUMP_TO_KMSG
-        /usr/bin/ptt_socket_app -d &
 
         set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
+        insmod $MODULE_BASE/extra/mac80211.ko $@
+        insmod $MODULE_BASE/extra/ath.ko $@
+        insmod $MODULE_BASE/extra/ath10k_core.ko $@
+        insmod $MODULE_BASE/extra/ath10k_snoc.ko $@
         set +e
-
-        if [ $start_sta -ne 1 ]; then
-		echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
-		wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
-		/usr/sbin/dhcpcd wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b
-	fi
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
@@ -84,20 +64,18 @@ do_ctrl_cld_ll () {
 
         ;;
 
-    start_ftm)
-        echo "Starting Pronto WLAN in FTM Mode ..." > $DUMP_TO_KMSG
-        insmod $MODULE_BASE/extra/wlan.ko con_mode=5
-        ;;
-
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        rmmod ath10k_snoc
+        rmmod ath10k_core
+        rmmod ath
+        rmmod mac80211
         ;;
 
     restart)
-        do_ctrl_cld_ll stop
+        do_ctrl_ath10k stop
         shift
-        do_ctrl_cld_ll start $@
+        do_ctrl_ath10k start $@
 
         return $?
         ;;
@@ -109,11 +87,8 @@ do_ctrl_cld_ll () {
 
     return 0
 }
-echo "Starting cnss_diag by default" > $DUMP_TO_KMSG
 
-/usr/bin/cnss_diag -q -f &
-
-do_ctrl_cld_ll $@
+do_ctrl_ath10k $@
 if [ $? -ne 0 ]; then
     echo $HELP >&2
     exit 1
