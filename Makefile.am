@@ -20,7 +20,11 @@ else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
+if IS_APQ8098
+dirs = wlan_apq8098_mediabox
+else
 dirs = wlan
+endif
 endif
 endif
 endif
