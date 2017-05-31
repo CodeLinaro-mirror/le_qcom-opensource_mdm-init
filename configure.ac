@@ -87,6 +87,13 @@ AC_ARG_ENABLE([target-sdx20],
        [target_sdx20="${enableval}"],
        target_sdx20=no)
 
+AC_ARG_ENABLE([ipc-wlan],
+	AC_HELP_STRING([--enable-ipc-wlan],
+		[Enable ipc wlan compile for targets that support ipc]),
+	[ipc_wlan="${enableval}"],
+	ipc_wlan=no)
+
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
@@ -108,6 +115,7 @@ if (test "x${snap_wlan}" = "xyes"); then
 else
 	AM_CONDITIONAL([IS_APQ8017_SNAP], [test "x$snap_wlan" = xyes])
 fi
+AM_CONDITIONAL([IS_IPC], [test "x$ipc_wlan" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -134,4 +142,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_APQ8017_SNAP],
 	[AC_CONFIG_FILES([wlan_apq8017_snap/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_IPC],
+	[AC_CONFIG_FILES([wlan_ipc/Makefile])])
 AC_OUTPUT

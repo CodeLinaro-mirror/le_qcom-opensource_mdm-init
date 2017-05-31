@@ -23,7 +23,11 @@ else
 if IS_APQ8098
 dirs = wlan_apq8098_mediabox
 else
+if IS_IPC
+dirs = wlan_ipc
+else
 dirs = wlan
+endif
 endif
 endif
 endif
