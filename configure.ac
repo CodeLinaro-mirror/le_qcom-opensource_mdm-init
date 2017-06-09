@@ -81,6 +81,12 @@ AC_ARG_ENABLE([snap-wlan],
 	[snap_wlan="${enableval}"],
 	snap_wlan=no)
 
+AC_ARG_ENABLE([robot-wlan],
+	AC_HELP_STRING([--enable-robot-wlan],
+		[Enable robot wlan compile for targets that support robot]),
+	[robot_wlan="${enableval}"],
+	robot_wlan=no)
+
 AC_ARG_ENABLE([target-sdx20],
        AC_HELP_STRING([--enable-target-sdx20],
                [Enable conditional compile for target sdx20]),
@@ -117,6 +123,12 @@ else
 fi
 AM_CONDITIONAL([IS_IPC], [test "x$ipc_wlan" = xyes])
 
+if (test "x${robot_wlan}" = "xyes"); then
+	AM_CONDITIONAL([IS_APQ8009_ROBOT], [test "x$target_apq8009" = xyes])
+else
+	AM_CONDITIONAL([IS_APQ8009_ROBOT], [test "x$robot_wlan" = xyes])
+fi
+
 AC_CONFIG_FILES([Makefile])
 
 AM_COND_IF([IS_MDM9607],
@@ -126,6 +138,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_PRONTO_ENABLED],
 	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_APQ8009_ROBOT],
+	[AC_CONFIG_FILES([wlan_apq8009_robot/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_APQ8096_DRONE],
