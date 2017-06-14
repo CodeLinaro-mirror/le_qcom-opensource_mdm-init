@@ -29,7 +29,11 @@ else
 if IS_IPC
 dirs = wlan_ipc
 else
+if IS_MDM9650
+dirs = wlan_mdm9650
+else
 dirs = wlan
+endif
 endif
 endif
 endif
