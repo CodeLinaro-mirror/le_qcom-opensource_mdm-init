@@ -17,6 +17,9 @@ else
 if IS_APQ8017_SNAP
 dirs = wlan_apq8017_snap
 else
+if IS_APQ8009_ROBOT
+dirs = wlan_apq8009_robot
+else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
@@ -26,7 +29,12 @@ else
 if IS_IPC
 dirs = wlan_ipc
 else
+if IS_MDM9650
+dirs = wlan_mdm9650
+else
 dirs = wlan
+endif
+endif
 endif
 endif
 endif
