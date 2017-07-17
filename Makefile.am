@@ -32,7 +32,11 @@ else
 if IS_MDM9650
 dirs = wlan_mdm9650
 else
+if IS_SDX20
+dirs = wlan_sdx20
+else
 dirs = wlan
+endif
 endif
 endif
 endif
