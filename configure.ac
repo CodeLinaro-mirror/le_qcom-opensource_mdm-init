@@ -110,6 +110,8 @@ AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
 AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 
+AM_CONDITIONAL([IS_SDX20], [test "x$target_sdx20" = xyes])
+
 if (test "x${drone_wlan}" = "xyes"); then
 	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$target_apq8096" = xyes])
 	AM_CONDITIONAL([IS_APQ8009_DRONE], [test "x$target_apq8009" = xyes])
@@ -168,4 +170,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_MDM9650],
 	[AC_CONFIG_FILES([wlan_mdm9650/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDX20],
+	[AC_CONFIG_FILES([wlan_sdx20/Makefile])])
 AC_OUTPUT
