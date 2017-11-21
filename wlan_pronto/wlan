@@ -39,7 +39,7 @@ do_ctrl_cld_ll () {
         echo "Starting Pronto WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_sta=0
-        if [ "$1" == "sta" ]; then
+        if [ "$1" == "sta" ] || [ "$1" == "ap" ]; then
             start_sta=1
         fi
 	if [ -f /persist/wlan_mac ]; then
@@ -61,7 +61,11 @@ do_ctrl_cld_ll () {
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
 
-        if [ $start_sta -ne 1 ]; then
+	if [ "$1" == "ap" ]; then
+		iwpriv wlan0 initAP
+	fi
+
+	if [ $start_sta -ne 1 ]; then
 		echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
 		wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
 		/usr/sbin/dhcpcd wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b
