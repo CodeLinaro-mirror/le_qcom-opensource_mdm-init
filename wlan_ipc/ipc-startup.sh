@@ -26,10 +26,11 @@ ifconfig wlan0 up
 ifconfig br0 hw ether $mac up
 
 /sbin/ip -4 monitor addr dev br0 | /usr/bin/ipmon &
-
-#wait for discovery tcp connect
+#for discovery tcp connect bug
 sleep 1
-/usr/bin/discovery &
+/usr/bin/discovery IPC8053_$ssid &
+/usr/bin/ipc-webserver &
+/usr/bin/rebootkey &
 
 echo "IPC8053 boot completed" > $DUMP_TO_KMSG
 
