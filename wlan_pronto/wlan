@@ -72,7 +72,8 @@ do_ctrl_cld_ll () {
 	if [ $start_sta -ne 1 ]; then
 		echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
                 if [ "$user" == "-c system" ]; then
-                 touch /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid /var/run/wpa_supplicant
+                 touch /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid
+                 mkdir -p /var/run/wpa_supplicant
                  chown -R 1000:0 /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid  /var/run/wpa_supplicant /var/run/resolv.conf /etc/resolv.conf
                 fi
                 wpa_args=" -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &"
