@@ -32,16 +32,14 @@ ifconfig eth0 up
 ifconfig wlan0 up
 ifconfig br0 hw ether $mac up
 
-/sbin/ip -4 monitor addr dev br0 | /usr/bin/ipmon &
-#for discovery tcp connect bug
-sleep 1
-/usr/bin/discovery IPC8053_$ssid &
-/usr/bin/ipc-webserver &
-/usr/bin/rebootkey &
 ip_arg=" -4 monitor addr dev br0"
 start-stop-daemon $user -S -a /sbin/ip --$ip_arg | start-stop-daemon $user -S -a /usr/bin/ipmon &
+
 #for discovery tcp connect bug
 sleep 1
+ifconfig br0 192.168.1.111 netmask 255.255.255.0
+dnsmasq --conf-file=/data/dnsmasq.conf --dhcp-leasefile=/data/dnsmasq.leases --addn-hosts=/data/hosts --pid-file=/data/br0_dnsmasq.pid -i br0 -I lo -z --dhcp-range=br0,192.168.1.112,192.168.1.200,255.255.255.0,43200 --dhcp-hostsfile=/data/dhcp_hosts
+
 start-stop-daemon $user -S -b -a /usr/bin/discovery
 
 echo "IPC8053 boot completed" > $DUMP_TO_KMSG
