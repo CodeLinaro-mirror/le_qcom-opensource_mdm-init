@@ -20,6 +20,9 @@ else
 if IS_APQ8009_ROBOT
 dirs = wlan_apq8009_robot
 else
+if IS_APQ8009_NAPLES
+dirs = wlan_apq8009_qsap
+else
 if IS_PRONTO_ENABLED
 dirs = wlan_pronto
 else
@@ -36,6 +39,7 @@ if IS_SDX20
 dirs = wlan_sdx20
 else
 dirs = wlan
+endif
 endif
 endif
 endif
