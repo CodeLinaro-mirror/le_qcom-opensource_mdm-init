@@ -99,6 +99,12 @@ AC_ARG_ENABLE([target-sdx20],
        [target_sdx20="${enableval}"],
        target_sdx20=no)
 
+AC_ARG_ENABLE([target-sdxpoorwills],
+	AC_HELP_STRING([--enable-target-sdxpoorwills],
+		[Enable conditional compile for target sdxpoorwills]),
+	[target_sdxpoorwills="${enableval}"],
+	target_sdxpoorwills=no)
+
 AC_ARG_ENABLE([ipc-wlan],
 	AC_HELP_STRING([--enable-ipc-wlan],
 		[Enable ipc wlan compile for targets that support ipc]),
@@ -110,7 +116,7 @@ AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
 
-AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdx20" = xyes -o "x$target_mdm9650" = xyes])
+AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdx20" = xyes -o "x$target_mdm9650" = xyes -o "x$target_sdxpoorwills" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
