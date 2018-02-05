@@ -37,10 +37,18 @@ start-stop-daemon $user -S -a /sbin/ip --$ip_arg | start-stop-daemon $user -S -a
 
 #for discovery tcp connect bug
 sleep 1
+start-stop-daemon $user -S -b -a /usr/bin/discovery
+
+pid=`ps -ef | pgrep "discovery" | awk '{ print $1}'`
+while [ "$pid" == "" ]
+do
+ pid=`ps -ef | pgrep "discovery" | awk '{ print $1}'`
+done
+
+echo "Discovery is up" > $DUMP_TO_KMSG
+
 ifconfig br0 192.168.1.111 netmask 255.255.255.0
 dnsmasq --conf-file=/data/dnsmasq.conf --dhcp-leasefile=/data/dnsmasq.leases --addn-hosts=/data/hosts --pid-file=/data/br0_dnsmasq.pid -i br0 -I lo -z --dhcp-range=br0,192.168.1.112,192.168.1.200,255.255.255.0,43200 --dhcp-hostsfile=/data/dhcp_hosts
-
-start-stop-daemon $user -S -b -a /usr/bin/discovery
 
 echo "IPC8053 boot completed" > $DUMP_TO_KMSG
 
