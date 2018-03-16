@@ -38,7 +38,11 @@ else
 if IS_SDX20
 dirs = wlan_sdx20
 else
+if IS_SDXPOORWILLS
+dirs = wlan_sdxpoorwills
+else
 dirs = wlan
+endif
 endif
 endif
 endif
