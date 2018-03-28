@@ -33,7 +33,7 @@ HELP="Usage $0 {start | stop | restart} <sta>"
 DUMP_TO_KMSG=/dev/kmsg
 serialno=`cat /sys/devices/virtual/android_usb/android0/iSerial`
 target_name=`cat /sys/devices/soc0/machine`
-if [ "$target_name" == "APQ8053" ]; then
+if [ "$target_name" == "APQ8053" -o "$target_name" == "MSM8953"  ]; then
  user="-c system"
 fi
 do_ctrl_cld_ll () {

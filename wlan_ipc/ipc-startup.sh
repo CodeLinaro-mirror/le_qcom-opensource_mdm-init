@@ -3,7 +3,7 @@
 DUMP_TO_KMSG=/dev/kmsg
 flag_file="/data/misc/wifi/FIRST_BOOT.flag"
 target_name=`cat /sys/devices/soc0/machine`
-if [ "$target_name" == "APQ8053" ]; then
+if [ "$target_name" == "APQ8053" -o "$target_name" == "MSM8953" ]; then
  user="-c system"
 fi
 mac=`cat /sys/class/net/wlan0/address`
