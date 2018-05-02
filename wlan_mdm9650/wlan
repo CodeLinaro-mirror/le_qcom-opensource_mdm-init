@@ -83,7 +83,7 @@ do_ctrl_cld_ll () {
 
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
-            iw dev wlan0 interface add wlan1 type __ap
+            iw dev wlan0 interface add wlan1 type station
             ifconfig wlan1 up 2> /dev/null
         fi
         ;;
