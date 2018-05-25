@@ -117,12 +117,17 @@ AC_ARG_ENABLE([ipc-wlan],
 	[ipc_wlan="${enableval}"],
 	ipc_wlan=no)
 
+AC_ARG_ENABLE([thirdparty-wlan],
+	AC_HELP_STRING([--enable-thirdparty-wlan],
+		[Enable conditional wlan compile for third-party target]),
+	[thirdparty_wlan="${enableval}"],
+	thirdparty_wlan=no)
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
 
-AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdx20" = xyes -o "x$target_mdm9650" = xyes -o "x$target_sdxpoorwills" = xyes])
+AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdx20" = xyes -o "x$target_mdm9650" = xyes -o "x$target_sdxpoorwills" = xyes -o "x$thirdparty_wlan" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
@@ -131,6 +136,8 @@ AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 AM_CONDITIONAL([IS_SDX20], [test "x$target_sdx20" = xyes])
 
 AM_CONDITIONAL([IS_SDXPOORWILLS], [test "x$target_sdxpoorwills" = xyes])
+
+AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
 
 if (test "x${drone_wlan}" = "xyes"); then
 	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$target_apq8096" = xyes])
@@ -220,3 +227,6 @@ AM_COND_IF([IS_SDXPOORWILLS],
 	[AC_CONFIG_FILES([wlan_sdxpoorwills/Makefile])])
 AC_OUTPUT
 
+AM_COND_IF([IS_THIRDPARTY_WLAN],
+	[AC_CONFIG_FILES([wlan_standalone/Makefile])])
+AC_OUTPUT

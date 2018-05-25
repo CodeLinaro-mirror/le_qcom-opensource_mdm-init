@@ -44,7 +44,11 @@ else
 if IS_SDXPOORWILLS
 dirs = wlan_sdxpoorwills
 else
+if IS_THIRDPARTY_WLAN
+dirs = wlan_standalone
+else
 dirs = wlan
+endif
 endif
 endif
 endif
