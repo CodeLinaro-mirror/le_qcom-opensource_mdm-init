@@ -81,6 +81,12 @@ AC_ARG_ENABLE([snap-wlan],
 	[snap_wlan="${enableval}"],
 	snap_wlan=no)
 
+AC_ARG_ENABLE([robot-som-wlan],
+	AC_HELP_STRING([--enable-robot-som-wlan],
+		[Enable robot som wlan compile for targets that support robot som]),
+	[robot_som_wlan="${enableval}"],
+	robot_som_wlan=no)
+
 AC_ARG_ENABLE([robot-wlan],
 	AC_HELP_STRING([--enable-robot-wlan],
 		[Enable robot wlan compile for targets that support robot]),
@@ -147,6 +153,12 @@ else
 	AM_CONDITIONAL([IS_APQ8009_ROBOT], [test "x$robot_wlan" = xyes])
 fi
 
+if (test "x${robot_som_wlan}" = "xyes"); then
+	AM_CONDITIONAL([IS_APQ8009_ROBOT_SOM], [test "x$target_apq8009" = xyes])
+else
+	AM_CONDITIONAL([IS_APQ8009_ROBOT_SOM], [test "x$robot_som_wlan" = xyes])
+fi
+
 if (test "x${naples_wlan}" = "xyes"); then
 	AM_CONDITIONAL([IS_APQ8009_NAPLES], [test "x$target_apq8009" = xyes])
 else
@@ -166,6 +178,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_APQ8009_ROBOT],
 	[AC_CONFIG_FILES([wlan_apq8009_robot/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_APQ8009_ROBOT_SOM],
+	[AC_CONFIG_FILES([wlan_apq8009_robot_som/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_APQ8009_NAPLES],
