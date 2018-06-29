@@ -111,6 +111,12 @@ AC_ARG_ENABLE([target-sdxpoorwills],
 	[target_sdxpoorwills="${enableval}"],
 	target_sdxpoorwills=no)
 
+AC_ARG_ENABLE([target-qcs405-som1],
+	AC_HELP_STRING([--enable-target-qcs405-som1],
+		[Enable conditional compile for target qcs405-som1]),
+	[target_qcs405som1="${enableval}"],
+	target_qcs405som1=no)
+
 AC_ARG_ENABLE([ipc-wlan],
 	AC_HELP_STRING([--enable-ipc-wlan],
 		[Enable ipc wlan compile for targets that support ipc]),
@@ -136,6 +142,8 @@ AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 AM_CONDITIONAL([IS_SDX20], [test "x$target_sdx20" = xyes])
 
 AM_CONDITIONAL([IS_SDXPOORWILLS], [test "x$target_sdxpoorwills" = xyes])
+
+AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
 
 AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
 
@@ -225,6 +233,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_SDXPOORWILLS],
 	[AC_CONFIG_FILES([wlan_sdxpoorwills/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QCS405SOM1],
+	[AC_CONFIG_FILES([wlan_qcs405-som1_qsap/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_THIRDPARTY_WLAN],
