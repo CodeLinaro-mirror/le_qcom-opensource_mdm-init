@@ -1,9 +1,11 @@
 etcdir = ${sysconfdir}
 
-misc_ddir = ${userfsdatadir}/misc/wifi
+misc_ddir = ${sysconfdir}/misc/wifi
 dist_misc_d_DATA = hostapd-open.conf
 dist_misc_d_DATA += hostapd-wlan1.conf
-dist_misc_d_DATA += hostapd-wpa2.conf
+dist_misc_d_DATA += hostapd-wlan2.conf
+dist_misc_d_DATA += sta_mode_hostapd.conf
+dist_misc_d_DATA += hostapd.conf
 dist_misc_d_DATA += wpa_supplicant.conf
 dist_misc_d_DATA += hostapd.accept
 dist_misc_d_DATA += hostapd.deny
