@@ -14,7 +14,11 @@ else
 if IS_DRONE
 dirs = wlan_drone
 else
+if IS_QCS405SOM1
+dirs = wlan_qcs405-som1_qsap
+else
 dirs = wlan
+endif
 endif
 endif
 endif
