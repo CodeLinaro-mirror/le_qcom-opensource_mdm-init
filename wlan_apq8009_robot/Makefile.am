@@ -11,5 +11,5 @@ dist_misc_d_DATA += wpa_supplicant.conf
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = wlan
 
-firmware_ddir = ${nonarch_base_libdir}/firmware/wlan/qca_cld
+firmware_ddir = ${nonarch_base_libdir}/firmware/wlan/qca_cld/qca6174
 dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
