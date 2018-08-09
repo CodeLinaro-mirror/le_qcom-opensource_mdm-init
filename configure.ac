@@ -45,6 +45,12 @@ AC_ARG_ENABLE([target-apq8098],
 	[target_apq8098="${enableval}"],
 	target_apq8098=no)
 
+AC_ARG_ENABLE([target-sda845],
+	AC_HELP_STRING([--enable-target-sda845],
+		[Enable conditional compile for target sda845]),
+	[target_sda845="${enableval}"],
+	targesda8455=no)
+
 AC_ARG_ENABLE([target-apq8009],
 	AC_HELP_STRING([--enable-target-apq8009],
 		[Enable conditional compile for target apq8009]),
@@ -133,6 +139,8 @@ AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
 
+AM_CONDITIONAL([IS_SDA845], [test "x$target_sda845" = xyes])
+
 AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdx20" = xyes -o "x$target_mdm9650" = xyes -o "x$target_sdxpoorwills" = xyes -o "x$thirdparty_wlan" = xyes])
 
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
@@ -209,6 +217,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_APQ8098],
 	[AC_CONFIG_FILES([wlan_apq8098_mediabox/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDA845],
+	[AC_CONFIG_FILES([wlan_sda845_robot/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_APQ8009_DRONE],

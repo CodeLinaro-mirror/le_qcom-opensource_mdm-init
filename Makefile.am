@@ -32,6 +32,9 @@ else
 if IS_APQ8098
 dirs = wlan_apq8098_mediabox
 else
+if IS_SDA845
+dirs = wlan_sda845_robot
+else
 if IS_IPC
 dirs = wlan_ipc
 else
@@ -51,6 +54,7 @@ if IS_THIRDPARTY_WLAN
 dirs = wlan_standalone
 else
 dirs = wlan
+endif
 endif
 endif
 endif
