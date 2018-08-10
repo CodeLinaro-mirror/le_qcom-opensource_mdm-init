@@ -48,7 +48,7 @@ do_ctrl_cld_ll () {
         fi
 
         set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
+        insmod $MODULE_BASE/extra/wlan_rome.ko $@
         set +e
 
         c=1
@@ -79,7 +79,7 @@ do_ctrl_cld_ll () {
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        rmmod wlan_rome
         ;;
 
     restart)
