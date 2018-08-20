@@ -63,6 +63,12 @@ AC_ARG_ENABLE([target-apq8017],
 	[target_apq8017="${enableval}"],
 	target_apq8017=no)
 
+AC_ARG_ENABLE([target-qcs605],
+	AC_HELP_STRING([--enable-target-qcs605],
+		[Enable conditional compile for target qcs605]),
+	[target_qcs605="${enableval}"],
+	target_qcs605=no)
+
 AC_ARG_ENABLE([pronto-wlan],
 	AC_HELP_STRING([--enable-pronto-wlan],
 		[Enable pronto wlan compile for targets that support Pronto]),
@@ -111,6 +117,12 @@ AC_ARG_ENABLE([target-sdxpoorwills],
 	[target_sdxpoorwills="${enableval}"],
 	target_sdxpoorwills=no)
 
+AC_ARG_ENABLE([target-qcs405-som1],
+	AC_HELP_STRING([--enable-target-qcs405-som1],
+		[Enable conditional compile for target qcs405-som1]),
+	[target_qcs405som1="${enableval}"],
+	target_qcs405som1=no)
+
 AC_ARG_ENABLE([ipc-wlan],
 	AC_HELP_STRING([--enable-ipc-wlan],
 		[Enable ipc wlan compile for targets that support ipc]),
@@ -135,7 +147,11 @@ AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 
 AM_CONDITIONAL([IS_SDX20], [test "x$target_sdx20" = xyes])
 
+AM_CONDITIONAL([IS_QCS605], [test "x$target_qcs605" = xyes])
+
 AM_CONDITIONAL([IS_SDXPOORWILLS], [test "x$target_sdxpoorwills" = xyes])
+
+AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
 
 AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
 
@@ -203,6 +219,10 @@ AM_COND_IF([IS_APQ8098],
 	[AC_CONFIG_FILES([wlan_apq8098_mediabox/Makefile])])
 AC_OUTPUT
 
+AM_COND_IF([IS_QCS605],
+	[AC_CONFIG_FILES([wlan_qcs605_concam/Makefile])])
+AC_OUTPUT
+
 AM_COND_IF([IS_APQ8009_DRONE],
 	[AC_CONFIG_FILES([wlan_apq8009_drone/Makefile])])
 AC_OUTPUT
@@ -225,6 +245,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_SDXPOORWILLS],
 	[AC_CONFIG_FILES([wlan_sdxpoorwills/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QCS405SOM1],
+	[AC_CONFIG_FILES([wlan_qcs405-som1_qsap/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_THIRDPARTY_WLAN],
