@@ -61,7 +61,7 @@ do_ctrl_cld_ll () {
                  mkdir -p /var/run/wpa_supplicant
                  chown -R 1000:0 /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid  /var/run/wpa_supplicant /var/run/resolv.conf /etc/resolv.conf
                 fi
-                wpa_args=" -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &"
+                wpa_args=" -Dnl80211 -iwlan0 -c /etc/misc/wifi/wpa_supplicant.conf &"
                 dhcpcd_args=" wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b"
                 start-stop-daemon $user -S -b -a /usr/sbin/wpa_supplicant --$wpa_args
                 start-stop-daemon $user -S -b -a /usr/sbin/dhcpcd --$dhcpcd_args
