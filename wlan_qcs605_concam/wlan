@@ -28,11 +28,10 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=3
+export RETRY_LIMIT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
-echo "Not Starting WLAN... $@" > $DUMP_TO_KMSG
-exit 0
+
 do_ctrl_cld_ll () {
     case "$1" in
     start)
