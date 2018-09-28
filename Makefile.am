@@ -32,6 +32,9 @@ else
 if IS_APQ8098
 dirs = wlan_apq8098_mediabox
 else
+if IS_QCS605
+dirs = wlan_qcs605_concam
+else
 if IS_IPC
 dirs = wlan_ipc
 else
@@ -44,7 +47,16 @@ else
 if IS_SDXPOORWILLS
 dirs = wlan_sdxpoorwills
 else
+if IS_QCS405SOM1
+dirs = wlan_qcs405-som1_qsap
+else
+if IS_THIRDPARTY_WLAN
+dirs = wlan_standalone
+else
 dirs = wlan
+endif
+endif
+endif
 endif
 endif
 endif

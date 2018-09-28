@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
+# Copyright (c) 2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -31,16 +31,13 @@ export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=3
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
-
+echo "Not Starting WLAN... $@" > $DUMP_TO_KMSG
+exit 0
 do_ctrl_cld_ll () {
     case "$1" in
     start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
-        start_sta=0
-        if [ "$1" == "sta" ] || [ "$1" == "ap" ]; then
-            start_sta=1
-        fi
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
             start_ap1=1
@@ -54,18 +51,7 @@ do_ctrl_cld_ll () {
         set -e
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
-        if [ $start_sta -ne 1 ]; then
-            echo "Starting wpa supplicant and dhcp client $@" > $DUMP_TO_KMSG
-                if [ "$user" == "-c system" ]; then
-                 touch /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid
-                 mkdir -p /var/run/wpa_supplicant
-                 chown -R 1000:0 /var/run/dhcpcd /var/run/dhcpcd-wlan0.pid  /var/run/wpa_supplicant /var/run/resolv.conf /etc/resolv.conf
-                fi
-                wpa_args=" -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &"
-                dhcpcd_args=" wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b"
-                start-stop-daemon $user -S -b -a /usr/sbin/wpa_supplicant --$wpa_args
-                start-stop-daemon $user -S -b -a /usr/sbin/dhcpcd --$dhcpcd_args
-        fi
+
         c=1
         ifconfig wlan0 up 2>  /dev/null
         rc=$?
@@ -89,7 +75,8 @@ do_ctrl_cld_ll () {
         ;;
 
     start_ftm)
-        do_ctrl_cld_ll start con_mode=5
+        do_ctrl_cld_ll start
+        echo 5 > /sys/module/wlan/parameters/con_mode
         ;;
 
     stop)
