@@ -29,13 +29,38 @@
 
 export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=3
+WLAN_CONF=/data/misc/wifi
+WLAN_INI=/lib/firmware/wlan/qca_cld
 HELP="Usage $0 {start | stop | restart} <sta>"
 DUMP_TO_KMSG=/dev/kmsg
 serialno=`cat /sys/devices/virtual/android_usb/android0/iSerial`
+naples_chip=`cat /proc/device-tree/soc/qcom,cnss_sdio/subsys-name`
 
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+if [ "$naples_chip" == "AR6320" ]; then
+        echo "Starting Naples WLAN... $@" > $DUMP_TO_KMSG
+        shift
+        start_ap1=0
+        if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
+            start_ap1=1
+            shift
+        elif [ "$1" == "ap" ]; then
+            shift
+        elif [ "$1" == "ap,sta" ]; then
+            return 1
+        fi
+
+        cp $WLAN_CONF/hostapd_naples.conf $WLAN_CONF/hostapd.conf
+        cp $WLAN_CONF/hostapd-wlan1_naples.conf $WLAN_CONF/hostapd-wlan1.conf
+        cp $WLAN_CONF/sta_mode_hostapd_naples.conf $WLAN_CONF/sta_mode_hostapd.conf
+        cp $WLAN_CONF/wpa_supplicant_naples.conf $WLAN_CONF/wpa_supplicant.conf
+
+        set -e
+        insmod $MODULE_BASE/extra/wlan_sdio.ko $@
+        set +e
+else
         echo "Starting Pronto WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_sta=0
@@ -66,7 +91,7 @@ do_ctrl_cld_ll () {
 		wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
 		/usr/sbin/dhcpcd wlan0 -t 0 -o domain_name_servers --noipv4ll -h -b
 	fi
-
+fi
         c=1
         ifconfig wlan0 up 2>  /dev/null
         rc=$?
@@ -82,11 +107,24 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
+if [ "$naples_chip" == "AR6320" ]; then
+        if [ $start_ap1 -eq 1 ]; then
+            echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
+            iw dev wlan0 interface add wlan1 type __ap
+            ifconfig wlan1 up 2> /dev/null
+        fi
+fi
+
         ;;
 
     start_ftm)
+if [ "$naples_chip" == "AR6320" ]; then
+        echo "Starting Naples WLAN in FTM Mode ..." > $DUMP_TO_KMSG
+        insmod $MODULE_BASE/extra/wlan_sdio.ko con_mode=5
+else
         echo "Starting Pronto WLAN in FTM Mode ..." > $DUMP_TO_KMSG
         insmod $MODULE_BASE/extra/wlan.ko con_mode=5
+fi
         ;;
 
     stop)
@@ -115,6 +153,9 @@ echo "Starting cnss_diag by default" > $DUMP_TO_KMSG
 
 do_ctrl_cld_ll $@
 if [ $? -ne 0 ]; then
+    if [ "$naples_chip" == "AR6320" ]; then
+    HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
+    fi
     echo $HELP >&2
     exit 1
 fi
