@@ -17,7 +17,11 @@ else
 if IS_QCS405SOM1
 dirs = wlan_qcs405-som1_qsap
 else
+if IS_SDMSTEPPE
+dirs = wlan_sdmsteppe
+else
 dirs = wlan
+endif
 endif
 endif
 endif

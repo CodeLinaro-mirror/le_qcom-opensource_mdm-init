@@ -57,6 +57,12 @@ AC_ARG_ENABLE([target-qcs405-som1],
 	[target_qcs405som1="${enableval}"],
 	target_qcs405som1=no)
 
+AC_ARG_ENABLE([target-sdmsteppe],
+	AC_HELP_STRING([--enable-target-sdmsteppe],
+		[Enable conditional compile for target sdmsteppe]),
+	[target_sdmsteppe="${enableval}"],
+	target_sdmsteppe=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -66,6 +72,8 @@ AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
 
 AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
+
+AM_CONDITIONAL([IS_SDMSTEPPE], [test "x$target_sdmsteppe" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -84,4 +92,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_QCS405SOM1],
 	[AC_CONFIG_FILES([wlan_qcs405-som1_qsap/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDMSTEPPE],
+	[AC_CONFIG_FILES([wlan_sdmsteppe/Makefile])])
 AC_OUTPUT
