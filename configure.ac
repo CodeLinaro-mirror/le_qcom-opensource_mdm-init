@@ -135,6 +135,12 @@ AC_ARG_ENABLE([thirdparty-wlan],
 	[thirdparty_wlan="${enableval}"],
 	thirdparty_wlan=no)
 
+AC_ARG_ENABLE([target-sdxprairie],
+	AC_HELP_STRING([--enable-target-sdxprairie],
+		[Enable conditional compile for target sdxprairie]),
+	[target_sdxprairie="${enableval}"],
+	target_sdxprairie=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
@@ -154,6 +160,8 @@ AM_CONDITIONAL([IS_SDXPOORWILLS], [test "x$target_sdxpoorwills" = xyes])
 AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
 
 AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
+
+AM_CONDITIONAL([IS_SDXPRAIRIE], [test "x$target_sdxprairie" = xyes])
 
 if (test "x${drone_wlan}" = "xyes"); then
 	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$target_apq8096" = xyes])
@@ -253,4 +261,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_THIRDPARTY_WLAN],
 	[AC_CONFIG_FILES([wlan_standalone/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDXPRAIRIE],
+	[AC_CONFIG_FILES([wlan_sdxprairie/Makefile])])
 AC_OUTPUT

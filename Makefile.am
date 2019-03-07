@@ -53,7 +53,11 @@ else
 if IS_THIRDPARTY_WLAN
 dirs = wlan_standalone
 else
+if IS_SDXPRAIRIE
+dirs = wlan_sdxprairie
+else
 dirs = wlan
+endif
 endif
 endif
 endif
