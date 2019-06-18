@@ -58,7 +58,7 @@ do_ctrl_cld_ll () {
             sleep 1
             ifconfig wlan0 up 2> /dev/null
             rc=$?
-            c=`expr $c + 1`
+            let c=$c+1
         done
 
         if [ $c -gt $RETRY_LIMIT ]; then
