@@ -16,3 +16,5 @@ dist_init_d_SCRIPTS = wlan
 
 firmware_ddir = /lib/firmware/wlan/qca_cld
 dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
+firmware_qca9377dir = /lib/firmware/wlan/qca_cld/wlan_sdio
+dist_firmware_qca9377_DATA = WCNSS_qcom_cfg_sdio.ini
