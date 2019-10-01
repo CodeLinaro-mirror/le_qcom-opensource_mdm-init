@@ -29,8 +29,10 @@
 
 export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=15
-HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
+HELP="Usage $0 {start | stop | restart} <ap | sta,ap> <wlan | wlan_sdio> <wlan | wlantf>"
 DUMP_TO_KMSG=/dev/kmsg
+MODNAME=wlan
+IFNAME=wlan
 
 do_ctrl_cld_ll () {
     case "$1" in
@@ -40,25 +42,30 @@ do_ctrl_cld_ll () {
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
             start_ap1=1
-            shift
-        elif [ "$1" == "ap" ]; then
-            shift
         elif [ "$1" == "ap,sta" ]; then
             return 1
         fi
+        shift
+        if [ "$1" == "wlan_sdio" ]; then
+            MODNAME=wlan_sdio
+        fi
+        shift
+        if [ "$1" == "wlantf" ]; then
+            IFNAME=wlantf
+        fi
 
         set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
+        insmod $MODULE_BASE/extra/${MODNAME}.ko $@
         set +e
 
         c=1
-        ifconfig wlan0 up 2>  /dev/null
+        ifconfig ${IFNAME}0 up 2>  /dev/null
         rc=$?
         while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
             sleep 1
-            ifconfig wlan0 up 2> /dev/null
+            ifconfig ${IFNAME}0 up 2> /dev/null
             rc=$?
-            let c=$c+1
+            c=$((c+1))
         done
 
         if [ $c -gt $RETRY_LIMIT ]; then
@@ -67,9 +74,9 @@ do_ctrl_cld_ll () {
         fi
 
         if [ $start_ap1 -eq 1 ]; then
-            echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
-            iw dev wlan0 interface add wlan1 type __ap
-            ifconfig wlan1 up 2> /dev/null
+            echo "Adding second AP interface(${IFNAME}1)" > $DUMP_TO_KMSG
+            iw dev ${IFNAME}0 interface add ${IFNAME}1 type __ap
+            ifconfig ${IFNAME}1 up 2> /dev/null
         fi
         ;;
 
