@@ -28,7 +28,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=15
+export RETRY_LIMIT=150
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
@@ -55,7 +55,7 @@ do_ctrl_cld_ll () {
         ifconfig wlan0 up 2>  /dev/null
         rc=$?
         while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
-            sleep 1
+            usleep 100000
             ifconfig wlan0 up 2> /dev/null
             rc=$?
             c=`expr $c + 1`
