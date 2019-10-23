@@ -29,7 +29,7 @@
 
 export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=15
-HELP="Usage $0 {start | stop | restart} <ap | sta,ap> <wlan | wlan_sdio> <wlan | wlantf>"
+HELP="Usage $0 {start | stop | restart} <ap | sta,ap> <wlan | wlan_sdio> <wlan | wlansr>"
 DUMP_TO_KMSG=/dev/kmsg
 MODNAME=wlan
 IFNAME=wlan
@@ -37,7 +37,6 @@ IFNAME=wlan
 do_ctrl_cld_ll () {
     case "$1" in
     start)
-        echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
@@ -50,9 +49,10 @@ do_ctrl_cld_ll () {
             MODNAME=wlan_sdio
         fi
         shift
-        if [ "$1" == "wlantf" ]; then
-            IFNAME=wlantf
+        if [ "$1" == "wlansr" ]; then
+            IFNAME=wlansr
         fi
+        echo "Starting $MODNAME... $@" > $DUMP_TO_KMSG
 
         set -e
         insmod $MODULE_BASE/extra/${MODNAME}.ko $@
@@ -86,8 +86,13 @@ do_ctrl_cld_ll () {
         ;;
 
     stop)
-        echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        shift
+        shift
+        if [ "$1" == "wlan_sdio" ]; then
+            MODNAME=wlan_sdio
+        fi
+        echo "Stopping $MODNAME..." > $DUMP_TO_KMSG
+        rmmod ${MODNAME}
         ;;
 
     restart)

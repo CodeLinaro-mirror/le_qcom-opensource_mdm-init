@@ -11,7 +11,8 @@ dist_misc_d_DATA += hostapd.accept
 dist_misc_d_DATA += hostapd.deny
 dist_misc_d_DATA += p2p_supplicant.conf
 dist_misc_d_DATA += hostapd_besra.conf
-dist_misc_d_DATA += hostapd_tf.conf
+dist_misc_d_DATA += hostapd_sr.conf
+dist_misc_d_DATA += wpa_supplicant_sr.conf
 
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = wlan
