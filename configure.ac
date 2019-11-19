@@ -147,6 +147,12 @@ AC_ARG_ENABLE([target-sdm845],
 	[target_sdm845="${enableval}"],
 	target_sdm845=no)
 
+AC_ARG_ENABLE([target-qcs8250],
+	AC_HELP_STRING([--enable-target-qcs8250],
+		[Enable conditional compile for target qcs8250]),
+	[target_qcs8250="${enableval}"],
+	target_qcs8250=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
@@ -166,6 +172,8 @@ AM_CONDITIONAL([IS_SDXPOORWILLS], [test "x$target_sdxpoorwills" = xyes])
 AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
 
 AM_CONDITIONAL([IS_SDM845], [test "x$target_sdm845" = xyes])
+
+AM_CONDITIONAL([IS_QCS8250], [test "x$target_qcs8250" = xyes])
 
 AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
 
@@ -277,4 +285,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_SDXPRAIRIE],
 	[AC_CONFIG_FILES([wlan_sdxprairie/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QCS8250],
+	[AC_CONFIG_FILES([wlan_qcs8250/Makefile])])
 AC_OUTPUT
