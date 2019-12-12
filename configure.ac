@@ -57,6 +57,12 @@ AC_ARG_ENABLE([target-qcs405-som1],
 	[target_qcs405som1="${enableval}"],
 	target_qcs405som1=no)
 
+AC_ARG_ENABLE([target-qcs40x],
+        AC_HELP_STRING([--enable-target-qcs40x],
+                [Enable conditional compile for target qcs40x]),
+        [target_qcs40x="${enableval}"],
+        target_qcs40x=no)
+
 AC_ARG_ENABLE([target-sdmsteppe],
 	AC_HELP_STRING([--enable-target-sdmsteppe],
 		[Enable conditional compile for target sdmsteppe]),
@@ -71,7 +77,7 @@ AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
 AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
 
-AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
+AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes -o "x$target_qcs40x" = xyes])
 
 AM_CONDITIONAL([IS_SDMSTEPPE], [test "x$target_sdmsteppe" = xyes])
 
