@@ -20,6 +20,7 @@ dist_firmware_d_DATA += QCA6574AU.LE.2.2.3_Rome_PCIe_qcacld-3.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.6_Rome_PCIe_qcacld-3.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.x_Rome_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA6696.LE.0.1_Hasting_PCIe_qcacld-3.0-iMX8.ini
+dist_firmware_d_DATA += QCA6595.LE.0.1_Genoa_PCIe_qcacld-3.0-iMX8.ini
 
 if NEED_SDIO_INI
 
