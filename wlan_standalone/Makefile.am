@@ -14,6 +14,7 @@ dist_init_d_SCRIPTS = wlan
 firmware_ddir = ${nonarch_base_libdir}/firmware/wlan
 dist_firmware_d_DATA  = QCA6574AU.LE.2.2.1_Rome_PCIe_qcacld-2.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.2.1_Rome_SDIO_qcacld-2.0.ini
+dist_firmware_d_DATA += QCA6574AU.LE.2.2.1_Rome_SDIO_qcacld-3.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.2.1_Tufello_SDIO_qcacld-2.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.2.2_Rome_SDIO_qcacld-2.0.ini
 dist_firmware_d_DATA += QCA6574AU.LE.2.2.3_Rome_PCIe_qcacld-3.0.ini
