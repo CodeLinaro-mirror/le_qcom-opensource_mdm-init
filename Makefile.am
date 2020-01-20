@@ -50,6 +50,9 @@ else
 if IS_SDM845
 dirs = wlan_sdm845_robot
 else
+if IS_QCS8250
+dirs = wlan_qcs8250
+else
 if IS_QCS405SOM1
 dirs = wlan_qcs405-som1_qsap
 else
@@ -60,6 +63,7 @@ if IS_SDXPRAIRIE
 dirs = wlan_sdxprairie
 else
 dirs = wlan
+endif
 endif
 endif
 endif
