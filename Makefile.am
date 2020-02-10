@@ -14,8 +14,8 @@ else
 if IS_DRONE
 dirs = wlan_drone
 else
-if IS_QCS8250
-dirs = wlan_qcs8250
+if IS_QRB5165
+dirs = wlan_qrb5165
 else
 if IS_QCS405SOM1
 dirs = wlan_qcs405-som1_qsap
