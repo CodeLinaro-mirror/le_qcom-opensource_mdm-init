@@ -37,6 +37,7 @@ IFNAME=wlan
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+        echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
@@ -51,8 +52,8 @@ do_ctrl_cld_ll () {
         shift
         if [ "$1" == "wlansr" ]; then
             IFNAME=wlansr
+	    shift
         fi
-        echo "Starting $MODNAME... $@" > $DUMP_TO_KMSG
 
         set -e
         insmod $MODULE_BASE/extra/${MODNAME}.ko $@
