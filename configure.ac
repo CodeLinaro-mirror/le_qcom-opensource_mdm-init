@@ -63,6 +63,12 @@ AC_ARG_ENABLE([target-sdmsteppe],
 	[target_sdmsteppe="${enableval}"],
 	target_sdmsteppe=no)
 
+AC_ARG_ENABLE([target-qrb5165],
+	AC_HELP_STRING([--enable-target-qrb5165],
+		[Enable conditional compile for target qrb5165]),
+	[target_qrb5165="${enableval}"],
+	target_qrb5165=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -72,6 +78,8 @@ AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
 
 AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
+
+AM_CONDITIONAL([IS_QRB5165], [test "x$target_qrb5165" = xyes])
 
 AM_CONDITIONAL([IS_SDMSTEPPE], [test "x$target_sdmsteppe" = xyes])
 
@@ -96,4 +104,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_SDMSTEPPE],
 	[AC_CONFIG_FILES([wlan_sdmsteppe/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QRB5165],
+	[AC_CONFIG_FILES([wlan_qrb5165/Makefile])])
 AC_OUTPUT
