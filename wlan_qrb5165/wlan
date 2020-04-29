@@ -51,6 +51,10 @@ do_ctrl_cld_ll () {
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
 
+        sleep 5
+
+        /sbin/wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
+
         c=1
         ifconfig wlan0 up 2>  /dev/null
         rc=$?
