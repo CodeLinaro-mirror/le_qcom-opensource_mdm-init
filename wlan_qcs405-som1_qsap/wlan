@@ -28,7 +28,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=15
+export TIMEOUT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap> <wlan | wlan_sdio> <wlan | wlansr>"
 DUMP_TO_KMSG=/dev/kmsg
 MODNAME=wlan
@@ -59,17 +59,9 @@ do_ctrl_cld_ll () {
         insmod $MODULE_BASE/extra/${MODNAME}.ko $@
         set +e
 
-        c=1
-        ifconfig ${IFNAME}0 up 2>  /dev/null
-        rc=$?
-        while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
-            sleep 1
-            ifconfig ${IFNAME}0 up 2> /dev/null
-            rc=$?
-            c=$((c+1))
-        done
+	busybox timeout -t $TIMEOUT /bin/sh -c 'until ifconfig $1 up 2>/dev/null; do sleep 0.1; done' arg0 ${IFNAME}0
 
-        if [ $c -gt $RETRY_LIMIT ]; then
+        if [ $? -ne 0 ]; then
             echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
             exit 1
         fi
