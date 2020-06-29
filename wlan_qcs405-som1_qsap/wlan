@@ -48,6 +48,7 @@ do_ctrl_cld_ll () {
         shift
         if [ "$1" == "wlan_sdio" ]; then
             MODNAME=wlan_sdio
+	    echo -n "/persist/factory" > /sys/module/firmware_class/parameters/path
         fi
         shift
         if [ "$1" == "wlansr" ]; then
