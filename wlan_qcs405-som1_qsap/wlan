@@ -49,6 +49,7 @@ do_ctrl_cld_ll () {
         if [ "$1" == "wlan_sdio" ]; then
             MODNAME=wlan_sdio
 	    echo -n "/persist/factory" > /sys/module/firmware_class/parameters/path
+	    echo 2000 > /sys/class/mmc_host/mmc1/clkgate_delay
         fi
         shift
         if [ "$1" == "wlansr" ]; then
