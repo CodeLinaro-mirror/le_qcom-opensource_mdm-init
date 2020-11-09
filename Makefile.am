@@ -23,7 +23,11 @@ else
 if IS_SDMSTEPPE
 dirs = wlan_sdmsteppe
 else
+if IS_SDXLEMUR
+dirs = wlan_sdxlemur
+else
 dirs = wlan
+endif
 endif
 endif
 endif
