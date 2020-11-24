@@ -153,6 +153,12 @@ AC_ARG_ENABLE([target-qcs8250],
 	[target_qcs8250="${enableval}"],
 	target_qcs8250=no)
 
+AC_ARG_ENABLE([target-sdxlemur],
+	AC_HELP_STRING([--enable-target-sdxlemur],
+		[Enable conditional compile for target sdxlemur]),
+	[target_sdxlemur="${enableval}"],
+	target_sdxlemur=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_APQ8098], [test "x$target_apq8098" = xyes])
@@ -178,6 +184,8 @@ AM_CONDITIONAL([IS_QCS8250], [test "x$target_qcs8250" = xyes])
 AM_CONDITIONAL([IS_THIRDPARTY_WLAN], [test "x$thirdparty_wlan" = xyes])
 
 AM_CONDITIONAL([IS_SDXPRAIRIE], [test "x$target_sdxprairie" = xyes])
+
+AM_CONDITIONAL([IS_SDXLEMUR], [test "x$target_sdxlemur" = xyes])
 
 if (test "x${drone_wlan}" = "xyes"); then
 	AM_CONDITIONAL([IS_APQ8096_DRONE], [test "x$target_apq8096" = xyes])
@@ -289,4 +297,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_QCS8250],
 	[AC_CONFIG_FILES([wlan_qcs8250/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDXLEMUR],
+        [AC_CONFIG_FILES([wlan_sdxlemur/Makefile])])
 AC_OUTPUT
