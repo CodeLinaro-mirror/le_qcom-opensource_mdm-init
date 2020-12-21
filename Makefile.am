@@ -62,7 +62,11 @@ else
 if IS_SDXPRAIRIE
 dirs = wlan_sdxprairie
 else
+if IS_SDXLEMUR
+dirs = wlan_sdxlemur
+else
 dirs = wlan
+endif
 endif
 endif
 endif
