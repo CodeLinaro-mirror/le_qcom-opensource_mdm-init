@@ -14,7 +14,11 @@ else
 if IS_DRONE
 dirs = wlan_drone
 else
+if IS_SDXNIGHTJAR
+dirs = wlan_sdxnightjar
+else
 dirs = wlan
+endif
 endif
 endif
 endif
