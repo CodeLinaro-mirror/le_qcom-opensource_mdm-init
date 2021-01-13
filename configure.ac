@@ -51,6 +51,12 @@ AC_ARG_ENABLE([drone-wlan],
 	[drone_wlan="${enableval}"],
 	drone_wlan=no)
 
+AC_ARG_ENABLE([target-sdxnightjar],
+        AC_HELP_STRING([--enable-target-sdxnightjar],
+                [Enable conditional compile for target sdxnightjar]),
+        [target_sdxnightjar="${enableval}"],
+        target_sdxnightjar=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
@@ -58,6 +64,10 @@ AM_CONDITIONAL([IS_MDM9650], [test "x$target_mdm9650" = xyes])
 AM_CONDITIONAL([IS_PRONTO_ENABLED], [test "x$pronto_wlan" = xyes])
 
 AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
+
+AM_CONDITIONAL([IS_SDXNIGHTJAR], [test "x$target_sdxnightjar" = xyes])
+
+AM_CONDITIONAL([NEED_SDIO_INI], [test "x$target_sdxnightjar" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -72,4 +82,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_DRONE],
 	[AC_CONFIG_FILES([wlan_drone/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SDXNIGHTJAR],
+        [AC_CONFIG_FILES([wlan_sdxnightjar/Makefile])])
 AC_OUTPUT
