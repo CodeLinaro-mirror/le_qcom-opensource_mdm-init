@@ -35,6 +35,8 @@ DUMP_TO_KMSG=/dev/kmsg
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+        echo "Starting cold boot... $@" > $DUMP_TO_KMSG
+	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6390/fs_ready
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
