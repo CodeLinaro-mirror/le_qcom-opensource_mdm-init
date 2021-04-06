@@ -28,7 +28,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=3
+export RETRY_LIMIT=10
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
