@@ -28,13 +28,15 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=3
+export RETRY_LIMIT=10
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+        echo "Starting cold boot... $@" > $DUMP_TO_KMSG
+	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6390/fs_ready
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
