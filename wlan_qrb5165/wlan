@@ -31,12 +31,17 @@ export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=10
 HELP="Usage $0 {init-start | start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
+QCA_VENDOR_ID=17CB
+QCA6490_DEVICE_ID=1103
 
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
-        echo "Starting cold boot... $@" > $DUMP_TO_KMSG
-        echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6390/fs_ready
+        rc=$(lspci | grep -i "$QCA_VENDOR_ID:$QCA6490_DEVICE_ID" | wc -l)
+        if [ $rc -eq 1 ]; then
+            echo "Starting cold boot... $@" > $DUMP_TO_KMSG
+            echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6390/fs_ready
+        fi
         do_ctrl_cld_ll start $@
         ;;
     start)
