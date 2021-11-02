@@ -34,7 +34,13 @@ set -e
 
 case "$1" in
   start)
-        echo -n "Loading cnss platform driver: "
+        if [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss-qca)" ];
+        then
+                echo -n "Loading cnss platform driver: "
+        else
+                echo -n "No MCC chip"
+                exit 0
+        fi
 
         if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko ];
         then
