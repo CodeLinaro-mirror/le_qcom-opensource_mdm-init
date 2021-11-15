@@ -28,7 +28,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=3
+export RETRY_LIMIT=10
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
@@ -65,6 +65,8 @@ do_ctrl_cld_ll () {
             echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
             exit 1
         fi
+
+        /usr/sbin/wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wlan/wpa_supplicant.conf &
 
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
