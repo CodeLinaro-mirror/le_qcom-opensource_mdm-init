@@ -42,9 +42,6 @@ case "$1" in
                 exit 0
         fi
 
-        mkdir -p /systemrw/wlan/bin/
-        ln -sf /usr/sbin/mcc/* /systemrw/wlan/bin/
-
         if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko ];
         then
                 echo "Load cnss platform drivers " > /dev/kmsg
