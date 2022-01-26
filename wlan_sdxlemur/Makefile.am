@@ -7,6 +7,7 @@ misc_ddir = ${sysconfdir}/misc/wifi
 dist_misc_d_DATA = hostapd.conf
 dist_misc_d_DATA += hostapd-wlan1.conf
 dist_misc_d_DATA += hostapd-wlan2.conf
+dist_misc_d_DATA += hostapd-wlan3.conf
 dist_misc_d_DATA += sta_mode_hostapd.conf
 dist_misc_d_DATA += wpa_supplicant.conf
 dist_misc_d_DATA += WCNSS_qcom_cfg.ini
