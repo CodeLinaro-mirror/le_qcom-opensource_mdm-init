@@ -89,6 +89,12 @@ do_ctrl_cld_ll () {
         do_ctrl_cld_ll start con_mode=5
         ;;
 
+    shutdown)
+        echo "Shutdown CNSS driver... $@" > $DUMP_TO_KMSG
+        echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6390/shutdown
+        do_ctrl_cld_ll stop $@
+        ;;
+
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
         rmmod wlan
