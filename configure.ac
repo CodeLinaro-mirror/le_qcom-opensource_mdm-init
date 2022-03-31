@@ -75,6 +75,12 @@ AC_ARG_ENABLE([target-sdxlemur],
 	[target_sdxlemur="${enableval}"],
 	target_sdxlemur=no)
 
+AC_ARG_ENABLE([target-sxrneo],
+	AC_HELP_STRING([--enable-target-sxrneo],
+		[Enable conditional compile for target sxrneo]),
+	[target_sxrneo="${enableval}"],
+	target_sxrneo=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -90,6 +96,8 @@ AM_CONDITIONAL([IS_QRB5165], [test "x$target_qrb5165" = xyes])
 AM_CONDITIONAL([IS_SDMSTEPPE], [test "x$target_sdmsteppe" = xyes])
 
 AM_CONDITIONAL([IS_SDXLEMUR], [test "x$target_sdxlemur" = xyes])
+
+AM_CONDITIONAL([IS_SXRNEO], [test "x$target_sxrneo" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -120,4 +128,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_SDXLEMUR],
         [AC_CONFIG_FILES([wlan_sdxlemur/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SXRNEO],
+        [AC_CONFIG_FILES([wlan_sxrneo/Makefile])])
 AC_OUTPUT
