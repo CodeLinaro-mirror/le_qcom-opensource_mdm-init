@@ -68,9 +68,13 @@ DUMP_TO_KMSG=/dev/kmsg
 
 do_ctrl_cld_ll () {
     case "$1" in
+    init-start)
+	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
+	echo 1 > /sys/kernel/icnss/wpss_boot
+	do_ctrl_cld_ll start @
+	;;
+
     start)
-#        echo "Starting WPSS... $@" > $DUMP_TO_KMSG
-#        echo 1 > /sys/kernel/icnss/wpss_boot
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
@@ -83,6 +87,7 @@ do_ctrl_cld_ll () {
             return 1
         fi
 
+        sleep 1
         set -e
         insmod $MODULE_BASE/extra/wlan.ko $@
         set +e
@@ -101,8 +106,6 @@ do_ctrl_cld_ll () {
             echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
             exit 1
         fi
-
-        /usr/sbin/wpa_supplicant -Dnl80211 -iwlan0 -c /data/misc/wifi/wpa_supplicant.conf &
 
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
