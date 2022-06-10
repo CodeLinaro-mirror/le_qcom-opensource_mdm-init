@@ -69,9 +69,10 @@ DUMP_TO_KMSG=/dev/kmsg
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
-	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
-	echo 1 > /sys/kernel/icnss/wpss_boot
-	do_ctrl_cld_ll start @
+	echo "WPSS Auto load disabled... $@" > $DUMP_TO_KMSG
+#	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
+#	echo 1 > /sys/kernel/icnss/wpss_boot
+#	do_ctrl_cld_ll start @
 	;;
 
     start)
