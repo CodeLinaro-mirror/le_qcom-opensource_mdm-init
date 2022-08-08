@@ -62,7 +62,7 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=10
+export RETRY_LIMIT=20
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
@@ -72,7 +72,7 @@ do_ctrl_cld_ll () {
 	echo "WPSS Auto load disabled... $@" > $DUMP_TO_KMSG
 #	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
 #	echo 1 > /sys/kernel/icnss/wpss_boot
-#	do_ctrl_cld_ll start @
+#	do_ctrl_cld_ll start
 	;;
 
     start)
@@ -89,9 +89,6 @@ do_ctrl_cld_ll () {
         fi
 
         sleep 1
-        set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
-        set +e
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
