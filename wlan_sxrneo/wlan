@@ -71,7 +71,10 @@ do_ctrl_cld_ll () {
     init-start)
 	echo "WPSS Auto load disabled... $@" > $DUMP_TO_KMSG
 #	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
+#wpss_boot for MSL
 #	echo 1 > /sys/kernel/icnss/wpss_boot
+#fs_ready for kiwi_v2
+	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-kiwi/fs_ready
 #	do_ctrl_cld_ll start
 	;;
 
