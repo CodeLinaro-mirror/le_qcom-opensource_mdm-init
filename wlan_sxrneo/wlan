@@ -75,7 +75,7 @@ do_ctrl_cld_ll () {
 #	echo 1 > /sys/kernel/icnss/wpss_boot
 #fs_ready for kiwi_v2
 	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-kiwi/fs_ready
-#	do_ctrl_cld_ll start
+	do_ctrl_cld_ll start
 	;;
 
     start)
