@@ -32,7 +32,11 @@ else
 if IS_SDXPINN
 dirs = wlan_sdxpinn
 else
+if IS_KALAMA
+dirs = wlan_kalama
+else
 dirs = wlan
+endif
 endif
 endif
 endif
