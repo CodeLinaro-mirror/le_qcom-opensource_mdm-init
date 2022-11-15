@@ -42,6 +42,16 @@ case "$1" in
                 exit 0
         fi
 
+        # Set board_name to be used
+        if [ "$(cat /sys/firmware/devicetree/base/model | grep -c "SDXLEMUR")" ];
+        then
+                mkdir -p /tmp/sysinfo/
+                echo "ap-sdxlemur-65" > /tmp/sysinfo/board_name
+        else
+                echo "WLAN driver not supported" > /dev/kmsg
+                exit 0
+        fi
+
         mkdir -p /systemrw/wlan/bin/
         ln -sf /usr/sbin/mcc/* /systemrw/wlan/bin/
 
