@@ -29,7 +29,11 @@ else
 if IS_SXRNEO
 dirs = wlan_sxrneo
 else
+if IS_SDXPINN
+dirs = wlan_sdxpinn
+else
 dirs = wlan
+endif
 endif
 endif
 endif
