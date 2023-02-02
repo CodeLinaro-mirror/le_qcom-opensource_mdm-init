@@ -87,6 +87,12 @@ AC_ARG_ENABLE([target-sdxpinn],
 	[target_sdxpinn="${enableval}"],
 	target_sdxpinn=no)
 
+AC_ARG_ENABLE([target-kalama],
+	AC_HELP_STRING([--enable-target-kalama],
+		[Enable conditional compile for target kalama]),
+	[target_kalama="${enableval}"],
+	target_kalama=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -106,6 +112,8 @@ AM_CONDITIONAL([IS_SDXLEMUR], [test "x$target_sdxlemur" = xyes])
 AM_CONDITIONAL([IS_SXRNEO], [test "x$target_sxrneo" = xyes])
 
 AM_CONDITIONAL([IS_SDXPINN], [test "x$target_sdxpinn" = xyes])
+
+AM_CONDITIONAL([IS_KALAMA], [test "x$target_kalama" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -146,3 +154,6 @@ AM_COND_IF([IS_SDXPINN],
         [AC_CONFIG_FILES([wlan_sdxpinn/Makefile])])
 AC_OUTPUT
 
+AM_COND_IF([IS_KALAMA],
+        [AC_CONFIG_FILES([wlan_kalama/Makefile])])
+AC_OUTPUT
