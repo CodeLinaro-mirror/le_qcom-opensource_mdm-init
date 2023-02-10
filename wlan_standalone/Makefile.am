@@ -24,6 +24,8 @@ dist_firmware_d_DATA += QCA6696.LE.0.1_Hasting_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA6595.LE.0.1_Genoa_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA6698AU.LE.1.1_HastingPrime_PCIe_qcacld-3.0-iMX8.ini
 
+dist_firmware_d_DATA += wow_pcie_wake_n_imx8mqevk.ini
+
 if NEED_SDIO_INI
 
 # Copy qcom_cfg.sdio.ini to ../firmware/wlan/qca9377/
