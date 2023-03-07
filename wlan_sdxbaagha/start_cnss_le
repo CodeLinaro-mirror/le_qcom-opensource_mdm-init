@@ -36,12 +36,13 @@ case "$1" in
   start)
 	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
                 echo -n "cnss: Rome device " > /dev/kmsg
-		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 		for dirlist in $(ls "/lib/modules/"); do
 			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
 			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
 			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
 			if [ -f $rome_name ]; then
+				mount -o remount, rw /
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 				mv $wlan_name $hsp_name
 				mv $rome_name $wlan_name
 				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.hsp
@@ -51,12 +52,13 @@ case "$1" in
 		done
         else
 		echo -n "cnss: HSP device" > /dev/kmsg
-		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 		for dirlist in $(ls "/lib/modules/"); do
 			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
 			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
 			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
 			if [ -f $hsp_name ]; then
+				mount -o remount, rw /
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 				mv $wlan_name $rome_name
 				mv $hsp_name $wlan_name
 				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.rome
