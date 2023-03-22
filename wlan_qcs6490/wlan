@@ -1,0 +1,86 @@
+#!/bin/sh
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
+export MODULE_BASE=/lib/modules/`uname -r`
+export RETRY_LIMIT=10
+HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
+DUMP_TO_KMSG=/dev/kmsg
+
+do_ctrl_cld_ll () {
+    case "$1" in
+    start)
+        echo "Starting WLAN... $@" > $DUMP_TO_KMSG
+        shift
+        start_ap1=0
+        if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
+            start_ap1=1
+            shift
+        elif [ "$1" == "ap" ]; then
+            shift
+        elif [ "$1" == "ap,sta" ]; then
+            return 1
+        fi
+
+        echo "Write WLAN fs_ready $@" > $DUMP_TO_KMSG
+        echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6490/fs_ready
+        set -e
+        insmod $MODULE_BASE/extra/wlan.ko $@
+        set +e
+
+        c=1
+        ifconfig wlan0 up 2>  /dev/null
+        rc=$?
+        while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
+            sleep 1
+            ifconfig wlan0 up 2> /dev/null
+            rc=$?
+            c=`expr $c + 1`
+        done
+
+        if [ $c -gt $RETRY_LIMIT ]; then
+            echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
+            exit 1
+        fi
+
+        /usr/sbin/wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wlan/wpa_supplicant.conf &
+
+        if [ $start_ap1 -eq 1 ]; then
+            echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
+            iw dev wlan0 interface add wlan1 type __ap
+            ifconfig wlan1 up 2> /dev/null
+        fi
+        ;;
+
+    start_ftm)
+        do_ctrl_cld_ll start con_mode=5
+        ;;
+
+    stop)
+        echo "Stopping WLAN..." > $DUMP_TO_KMSG
+        rmmod wlan
+        ;;
+
+    restart)
+        do_ctrl_cld_ll stop
+        shift
+        do_ctrl_cld_ll start $@
+
+        return $?
+        ;;
+
+    *)
+        return 1
+        ;;
+    esac
+
+    return 0
+}
+
+do_ctrl_cld_ll $@
+if [ $? -ne 0 ]; then
+    echo $HELP >&2
+    exit 1
+fi
+
+exit 0
