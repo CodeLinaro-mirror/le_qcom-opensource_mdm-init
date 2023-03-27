@@ -65,6 +65,7 @@ export MODULE_BASE=/lib/modules/`uname -r`
 export RETRY_LIMIT=75
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
+WLAN_MODULE=qca_cld3_kiwi_v2
 
 do_ctrl_cld_ll () {
     case "$1" in
@@ -77,6 +78,15 @@ do_ctrl_cld_ll () {
 
     start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
+	if [ $( cat /proc/modules | grep -c $WLAN_MODULE ) -ne 0 ]; then
+		echo "module $WLAN_MODULE already loaded" > $DUMP_TO_KMSG
+	else
+		set -e
+		insmod $MODULE_BASE/extra/$WLAN_MODULE.ko $@
+		set +e
+		echo "module $WLAN_MODULE loaded" > $DUMP_TO_KMSG
+	fi
+
         shift
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
@@ -90,7 +100,7 @@ do_ctrl_cld_ll () {
 
         c=1
         while [ $c -le $RETRY_LIMIT ]; do
-	    ifconfig wlan0 up > /dev/null
+	    ifconfig wlan0 up 2> /dev/null
 	    rc=$?
 	    if [ "$rc" -eq "0" ]; then
 	        break
@@ -118,7 +128,7 @@ do_ctrl_cld_ll () {
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        rmmod $WLAN_MODULE
         ;;
 
     restart)
