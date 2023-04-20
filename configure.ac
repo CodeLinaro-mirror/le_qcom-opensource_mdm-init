@@ -75,6 +75,12 @@ AC_ARG_ENABLE([target-qrbx210-rbx],
 	[target_qrbx210rbx="${enableval}"],
 	target_qrbx210rbx=no)
 
+AC_ARG_ENABLE([target-qcs6490],
+	AC_HELP_STRING([--enable-target-qcs6490],
+		[Enable conditional compile for target qcs6490]),
+	[target_qcs6490="${enableval}"],
+	target_qcs6490=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -86,6 +92,8 @@ AM_CONDITIONAL([IS_DRONE], [test "x$drone_wlan" = xyes])
 AM_CONDITIONAL([IS_QCS405SOM1], [test "x$target_qcs405som1" = xyes])
 
 AM_CONDITIONAL([IS_QRB5165], [test "x$target_qrb5165" = xyes])
+
+AM_CONDITIONAL([IS_QCS6490], [test "x$target_qcs6490" = xyes])
 
 AM_CONDITIONAL([IS_QRBX210], [test "x$target_qrbx210rbx" = xyes])
 
@@ -120,4 +128,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_QRBX210],
 	[AC_CONFIG_FILES([wlan_qrbx210-rbx/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QCS6490],
+	[AC_CONFIG_FILES([wlan_qcs6490/Makefile])])
 AC_OUTPUT
