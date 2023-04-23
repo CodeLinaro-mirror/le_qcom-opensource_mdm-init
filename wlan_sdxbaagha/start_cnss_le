@@ -34,28 +34,39 @@ set -e
 
 case "$1" in
   start)
-        if [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss-qca)" ];
-        then
-                echo -n "Loading cnss platform driver: "
+	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
+                echo -n "cnss: Rome device " > /dev/kmsg
+		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
+		for dirlist in $(ls "/lib/modules/"); do
+			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
+			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
+			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
+			if [ -f $rome_name ]; then
+				mv $wlan_name $hsp_name
+				mv $rome_name $wlan_name
+				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.hsp
+				mv /lib/wifi/qcacld32-modules.rome /lib/wifi/qcacld32-modules
+				echo -n "cnss: Update to rome config" > /dev/kmsg
+			fi
+		done
         else
-                echo -n "No MCC chip"
-                exit 0
+		echo -n "cnss: HSP device" > /dev/kmsg
+		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
+		for dirlist in $(ls "/lib/modules/"); do
+			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
+			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
+			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
+			if [ -f $hsp_name ]; then
+				mv $wlan_name $rome_name
+				mv $hsp_name $wlan_name
+				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.rome
+				mv /lib/wifi/qcacld32-modules.hsp /lib/wifi/qcacld32-modules
+				echo -n "cnss: update to HSP config" > /dev/kmsg
+			fi
+		done
         fi
 
-        mkdir -p /systemrw/wlan/bin/
-        ln -sf /usr/sbin/mcc/* /systemrw/wlan/bin/
-
-        if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko ];
-        then
-                echo "Load cnss platform drivers " > /dev/kmsg
-                insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss_utils/wlan_firmware_service_v01.ko
-                insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss_utils/device_management_service_v01.ko
-                insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko
-        else
-                echo "cnss module does not exist "
-        fi
-
-        echo "Done loading cnss platform driver "
+        echo "Update cnss config done" > /dev/kmsg
         ;;
   stop)
         echo -n "Unloading cnss platform driver "
