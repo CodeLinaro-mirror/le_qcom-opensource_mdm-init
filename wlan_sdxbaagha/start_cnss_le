@@ -27,6 +27,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+# Changes from Qualcomm Innovation Center are provided under the following license:
+
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # cnss module init.d script
 
 export MODULE_BASE=/lib/modules/`uname -r`/
@@ -36,31 +41,25 @@ case "$1" in
   start)
 	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
                 echo -n "cnss: Rome device " > /dev/kmsg
-		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 		for dirlist in $(ls "/lib/modules/"); do
 			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
-			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
-			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
-			if [ -f $rome_name ]; then
-				mv $wlan_name $hsp_name
-				mv $rome_name $wlan_name
-				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.hsp
-				mv /lib/wifi/qcacld32-modules.rome /lib/wifi/qcacld32-modules
+			if [ -f $rome_name ] && [ -z "$(echo `cat /lib/wifi/qcacld32-modules | grep wlan_rome`)" ]; then
+				rm -rf /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				rm -rf /etc/misc/wifi/qcacld32-modules
+				ln -sf /etc/misc/wifi/qcacld32-modules.rome /etc/misc/wifi/qcacld32-modules
 				echo -n "cnss: Update to rome config" > /dev/kmsg
 			fi
 		done
         else
 		echo -n "cnss: HSP device" > /dev/kmsg
-		ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.ini /lib/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini
 		for dirlist in $(ls "/lib/modules/"); do
-			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
-			hsp_name="/lib/modules/${dirlist}/extra/wlan_hsp.ko"
-			wlan_name="/lib/modules/${dirlist}/extra/wlan.ko"
-			if [ -f $hsp_name ]; then
-				mv $wlan_name $rome_name
-				mv $hsp_name $wlan_name
-				mv /lib/wifi/qcacld32-modules /lib/wifi/qcacld32-modules.rome
-				mv /lib/wifi/qcacld32-modules.hsp /lib/wifi/qcacld32-modules
+			hsp_name="/lib/modules/${dirlist}/extra/wlan.ko"
+			if [ -f $hsp_name ] && [ -n "$(echo `cat /lib/wifi/qcacld32-modules | grep wlan_rome`)" ]; then
+				rm -rf /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.hsp.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				rm -rf /etc/misc/wifi/qcacld32-modules
+				ln -sf /etc/misc/wifi/qcacld32-modules.hsp /etc/misc/wifi/qcacld32-modules
 				echo -n "cnss: update to HSP config" > /dev/kmsg
 			fi
 		done
