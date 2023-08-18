@@ -27,7 +27,9 @@ do_ctrl_cld_ll () {
         model=$(cat /proc/device-tree/model | grep -a "IoT RB3 GEN2")
         if [ "$model" != "" ]; then
             MODNAME=wlan-msl
-            mv $INIPATH/WCNSS_qcom_cfg.ini.msl $INIPATH/$MODNAME/WCNSS_qcom_cfg.ini
+            if [ ! -f $INIPATH/$MODNAME/WCNSS_qcom_cfg.ini ]; then
+                ln -s $INIPATH/WCNSS_qcom_cfg.ini.msl $INIPATH/$MODNAME/WCNSS_qcom_cfg.ini
+            fi
             echo "Write 1 to Wpss_boot $@" > $DUMP_TO_KMSG
             echo 1 > /sys/devices/platform/soc/17a10040.qcom,wcn6750/wpss_boot
         else
