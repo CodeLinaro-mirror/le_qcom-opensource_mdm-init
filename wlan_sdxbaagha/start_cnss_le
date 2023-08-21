@@ -53,6 +53,10 @@ case "$1" in
 		done
         else
 		echo -n "cnss: HSP device" > /dev/kmsg
+
+		# Kuno+HSP doesn't support 11be
+		grep -q 11bea /etc/misc/wifi/6g_wireless && sed -i 's/11bea/11axa/' /etc/misc/wifi/6g_wireless
+
 		for dirlist in $(ls "/lib/modules/"); do
 			hsp_name="/lib/modules/${dirlist}/extra/wlan.ko"
 			if [ -f $hsp_name ] && [ -n "$(echo `cat /lib/wifi/qcacld32-modules | grep wlan_rome`)" ]; then
