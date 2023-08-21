@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=10
+export RETRY_LIMIT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 MODNAME=wlan
