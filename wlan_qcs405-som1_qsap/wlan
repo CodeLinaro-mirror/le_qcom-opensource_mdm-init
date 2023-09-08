@@ -120,7 +120,8 @@ do_ctrl_cld_ll () {
         ;;
 
     start_ftm)
-        do_ctrl_cld_ll start con_mode=5
+        do_ctrl_cld_ll start
+        echo 5 > /sys/module/wlan/parameters/con_mode
         ;;
 
     stop)
