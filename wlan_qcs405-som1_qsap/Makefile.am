@@ -21,3 +21,5 @@ firmware_ddir = /lib/firmware/wlan/qca_cld
 dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
 firmware_qca9377dir = /lib/firmware/wlan/qca_cld/wlan_sdio
 dist_firmware_qca9377_DATA = WCNSS_qcom_cfg_sdio.ini
+firmware_qcs40xdir = /lib/firmware/wlan/qca_cld/wlan_debug
+dist_firmware_qcs40x_DATA = WCNSS_qcom_cfg.ini
