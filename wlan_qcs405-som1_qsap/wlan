@@ -87,6 +87,15 @@ do_ctrl_cld_ll () {
         elif [ "$1" == "ap,sta" ]; then
             return 1
         fi
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            echo "Loading wlan_debug... $@" > $DUMP_TO_KMSG
+            MODNAME=${MODNAME}_debug
+        fi
 
 	set -e
         insmod $MODULE_BASE/${MODNAME}.ko $@
@@ -124,6 +133,15 @@ do_ctrl_cld_ll () {
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
         killall hostapd
         killall wpa_supplicant
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            MODNAME=${MODNAME}_debug
+        fi
+
         rmmod ${MODNAME}
         ;;
 
