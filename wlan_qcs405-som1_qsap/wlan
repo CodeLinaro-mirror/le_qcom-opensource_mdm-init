@@ -74,7 +74,6 @@ do_ctrl_cld_ll () {
     start)
         echo "Starting WLAN Calibration... $@" > $DUMP_TO_KMSG
 	echo 1 > /sys/kernel/icnss/wpss_boot
-	sleep 5
 
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
