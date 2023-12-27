@@ -71,14 +71,10 @@ IFNAME=wlan
 
 do_ctrl_cld_ll () {
     case "$1" in
-    init-start)
+    start)
         echo "Starting WLAN Calibration... $@" > $DUMP_TO_KMSG
 	echo 1 > /sys/kernel/icnss/wpss_boot
-	sleep 5
-	do_ctrl_cld_ll start
-	;;
 
-    start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
@@ -89,6 +85,15 @@ do_ctrl_cld_ll () {
             shift
         elif [ "$1" == "ap,sta" ]; then
             return 1
+        fi
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            echo "Loading wlan_debug... $@" > $DUMP_TO_KMSG
+            MODNAME=${MODNAME}_debug
         fi
 
 	set -e
@@ -110,8 +115,6 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
-        /usr/sbin/wpa_supplicant -Dnl80211 -i${IFNAME}0 -c /etc/misc/wifi/wpa_supplicant.conf &
-
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(${IFNAME}1)" > $DUMP_TO_KMSG
             iw dev ${IFNAME}0 interface add ${IFNAME}1 type __ap
@@ -120,12 +123,24 @@ do_ctrl_cld_ll () {
         ;;
 
     start_ftm)
+        do_ctrl_cld_ll stop
         do_ctrl_cld_ll start
         echo 5 > /sys/module/wlan/parameters/con_mode
         ;;
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
+        killall hostapd
+        killall wpa_supplicant
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            MODNAME=${MODNAME}_debug
+        fi
+
         rmmod ${MODNAME}
         ;;
 
