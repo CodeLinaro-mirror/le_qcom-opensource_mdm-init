@@ -74,7 +74,6 @@ do_ctrl_cld_ll () {
     start)
         echo "Starting WLAN Calibration... $@" > $DUMP_TO_KMSG
 	echo 1 > /sys/kernel/icnss/wpss_boot
-	sleep 5
 
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
@@ -86,6 +85,15 @@ do_ctrl_cld_ll () {
             shift
         elif [ "$1" == "ap,sta" ]; then
             return 1
+        fi
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            echo "Loading wlan_debug... $@" > $DUMP_TO_KMSG
+            MODNAME=${MODNAME}_debug
         fi
 
 	set -e
@@ -124,6 +132,15 @@ do_ctrl_cld_ll () {
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
         killall hostapd
         killall wpa_supplicant
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            MODNAME=${MODNAME}_debug
+        fi
+
         rmmod ${MODNAME}
         ;;
 
