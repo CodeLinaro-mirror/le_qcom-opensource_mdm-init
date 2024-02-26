@@ -37,5 +37,6 @@ AM_CONDITIONAL([IS_QCM6490], [test "x$qcm6490" = xyes])
 AC_CONFIG_FILES([Makefile])
 
 AM_COND_IF([IS_QCM6490],
-	[AC_CONFIG_FILES([wlan_qcm6490/Makefile])])
+	[AC_CONFIG_FILES([wlan_qcm6490/Makefile])],
+	[AC_CONFIG_FILES([wlan/Makefile])])
 AC_OUTPUT
