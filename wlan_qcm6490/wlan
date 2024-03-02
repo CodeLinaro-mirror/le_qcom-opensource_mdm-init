@@ -43,7 +43,7 @@ do_ctrl_cld_ll () {
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
 
 	set -e
-	insmod $MODULE_BASE/updates/$MODNAME.ko $@
+	modprobe $MODNAME
 	set +e
 
         c=1
@@ -99,6 +99,7 @@ do_ctrl_cld_ll () {
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
 	killall wpa_supplicant
 	killall dhcpcd
+	rmmod $MODNAME
         ;;
 
     restart)
