@@ -34,9 +34,24 @@ AC_ARG_ENABLE([qcm6490],
 
 AM_CONDITIONAL([IS_QCM6490], [test "x$qcm6490" = xyes])
 
+AC_ARG_ENABLE([qcs8550],
+	AC_HELP_STRING([--enable-qcs8550],
+		[Enable conditional compile for target qcs8550]),
+	[qcs8550="${enableval}"],
+	qcs8550=no)
+
+AM_CONDITIONAL([IS_QCS8550], [test "x$qcs8550" = xyes])
+
 AC_CONFIG_FILES([Makefile])
 
 AM_COND_IF([IS_QCM6490],
-	[AC_CONFIG_FILES([wlan_qcm6490/Makefile])],
+	[AC_CONFIG_FILES([wlan_qcm6490/Makefile])])
+
+AM_COND_IF([IS_QCS8550],
+	[AC_CONFIG_FILES([wlan_qcs8550/Makefile])])
+
+AM_CONDITIONAL([IS_DEFAULT], [test "x$qcm6490" = xno -a "x$qcs8550" = xno])
+AM_COND_IF([IS_DEFAULT],
 	[AC_CONFIG_FILES([wlan/Makefile])])
+
 AC_OUTPUT
