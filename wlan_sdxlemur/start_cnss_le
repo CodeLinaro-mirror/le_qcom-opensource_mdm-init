@@ -54,6 +54,15 @@ case "$1" in
 
         mkdir -p /systemrw/wlan/bin/
         ln -sf /usr/sbin/mcc/* /systemrw/wlan/bin/
+
+        mkdir -p /systemrw/wlan/config/
+        if [ -f /etc/misc/wifi/2g_wireless ]; then
+                ln -sf /etc/misc/wifi/2g_wireless /systemrw/wlan/config/2g_wireless
+        fi
+        if [ -f /etc/misc/wifi/5g_wireless ]; then
+                ln -sf /etc/misc/wifi/5g_wireless /systemrw/wlan/config/5g_wireless
+        fi
+
         ln -sf /usr/sbin/ipq/pairing_client_app /systemrw/wlan/bin/pairing_client_app
         ln -sf /usr/sbin/ipq/provisioning_test_app /systemrw/wlan/bin/provisioning_test_app
         ln -sf /usr/sbin/ipq/encrypt_client_app /systemrw/wlan/bin/encrypt_client_app
