@@ -33,7 +33,7 @@
 
 export MODULE_BASE=/lib/modules/`uname -r`
 export MODNAME=wlan
-export RETRY_LIMIT=10
+export RETRY_LIMIT=20
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
