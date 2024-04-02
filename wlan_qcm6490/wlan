@@ -61,7 +61,7 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
-	wpa_supplicant -Dnl80211 -iwlan0 -c /etc/wpa_supplicant.conf &
+	wpa_supplicant -Dnl80211 -iwlan0 -ddd -c /etc/wpa_supplicant.conf -f /tmp/wpa_supplicant-log.txt &
 
 	dhcpcd wlan0
 
