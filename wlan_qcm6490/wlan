@@ -42,9 +42,7 @@ do_ctrl_cld_ll () {
     start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
 
-	set -e
 	modprobe $MODNAME
-	set +e
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
