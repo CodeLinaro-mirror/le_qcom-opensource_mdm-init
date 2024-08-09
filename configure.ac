@@ -42,6 +42,14 @@ AC_ARG_ENABLE([qcs8550],
 
 AM_CONDITIONAL([IS_QCS8550], [test "x$qcs8550" = xyes])
 
+AC_ARG_ENABLE([upstream],
+	AC_HELP_STRING([--enable-upstream],
+		[Enable conditional compile for target upstream]),
+	[upstream="${enableval}"],
+	upstream=no)
+
+AM_CONDITIONAL([IS_UPSTREAM], [test "x$upstream" = xyes])
+
 AC_CONFIG_FILES([Makefile])
 
 AM_COND_IF([IS_QCM6490],
@@ -50,7 +58,10 @@ AM_COND_IF([IS_QCM6490],
 AM_COND_IF([IS_QCS8550],
 	[AC_CONFIG_FILES([wlan_qcs8550/Makefile])])
 
-AM_CONDITIONAL([IS_DEFAULT], [test "x$qcm6490" = xno -a "x$qcs8550" = xno])
+AM_COND_IF([IS_UPSTREAM],
+	[AC_CONFIG_FILES([wlan_upstream/Makefile])])
+
+AM_CONDITIONAL([IS_DEFAULT], [test "x$qcm6490" = xno -a "x$qcs8550" = xno  -a "x$upstream" = xno])
 AM_COND_IF([IS_DEFAULT],
 	[AC_CONFIG_FILES([wlan/Makefile])])
 
