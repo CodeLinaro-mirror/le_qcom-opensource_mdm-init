@@ -79,6 +79,33 @@ case "$1" in
         fi
 
         echo "Done loading cnss platform driver "
+
+        wlan_cfg="/etc/data/wlan_cfg.xml"
+        mobileap_cfg="/etc/data/mobileap_cfg.xml"
+        if [ ! -f $wlan_cfg ] || [ ! -f $mobileap_cfg ]; then
+		        echo "$wlan_cfg or $mobileap_cfg not exist" > /dev/kmsg
+		        exit 0
+        fi
+        EZMeshEnabled=`grep EZMeshEnable $wlan_cfg | awk -F ">" '{print $2}' | awk -F "<" '{print $1}'`
+        WLANEnableAtBootup=`grep WLANEnableAtBootup $mobileap_cfg | awk -F ">" '{print $2}' | awk -F "<" '{print $1}'`
+        echo "EZMeshEnabled=$EZMeshEnabled, WLANEnableAtBootup=$WLANEnableAtBootup" > /dev/kmsg
+        if [ $EZMeshEnabled == 1 ] && [ $WLANEnableAtBootup == 1 ]; then
+                echo "start to mount ezmesh files" > /dev/kmsg
+                /sbin/mount-copybind /systemrw/ipq/config/wireless /etc/config/wireless
+                /sbin/mount-copybind /systemrw/ipq/config/ezmesh /etc/config/ezmesh
+                /sbin/mount-copybind /systemrw/ipq/config/wsplcd /etc/config/wsplcd
+                /sbin/mount-copybind /systemrw/ipq/config/repacd /etc/config/repacd
+                /sbin/mount-copybind /systemrw/ipq/config/ezlbd /etc/config/ezlbd
+                /sbin/mount-copybind /systemrw/ipq/config/bss-policy.conf /etc/wsplcd/map/bss-policy.conf
+                /sbin/mount-copybind /systemrw/ipq/config/map.conf /etc/config/map.conf
+                /sbin/mount-copybind /systemrw/ipq/config/scheme-a.conf /etc/wsplcd/map/templates/scheme-a.conf
+                /sbin/mount-copybind /systemrw/ipq/config/scheme-b.conf /etc/wsplcd/map/templates/scheme-b.conf
+                /sbin/mount-copybind /systemrw/ipq/config/scheme-c.conf /etc/wsplcd/map/templates/scheme-c.conf
+                /sbin/mount-copybind /systemrw/ipq/config/scheme-d.conf /etc/wsplcd/map/templates/scheme-d.conf
+                /sbin/mount-copybind /systemrw/ipq/config/scheme-e.conf /etc/wsplcd/map/templates/scheme-e.conf
+                /sbin/mount-copybind /systemrw/ipq/config/sp-rules.conf /etc/ezmesh/sp-rules.conf
+                echo "mount ezmesh files done" >/dev/kmsg
+        fi
         ;;
   stop)
         echo -n "Unloading cnss platform driver "
