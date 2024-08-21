@@ -40,9 +40,13 @@ DUMP_TO_KMSG=/dev/kmsg
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+        echo "Starting WPSS boot ... $@" > $DUMP_TO_KMSG
+
+        echo 1 > /sys/kernel/icnss/wpss_boot
+
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
 
-	modprobe $MODNAME
+        modprobe $MODNAME
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
