@@ -10,6 +10,10 @@ if IS_QCS8550
 dirs = wlan_qcs8550
 endif
 
+if IS_UPSTREAM
+dirs = wlan_upstream
+endif
+
 dirs ?= wlan
 
 SUBDIRS = $(dirs)
