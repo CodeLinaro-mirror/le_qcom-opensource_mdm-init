@@ -37,14 +37,24 @@ export RETRY_LIMIT=20
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 
+model=$(ls /proc/device-tree/soc@0/ | grep "qcom,cnss-" | grep -oP '(?<=qcom,cnss-)[^@]+')
+if [ "x$model" = "xqca6490" ]; then
+	export MODNAME=$model
+fi
+
 do_ctrl_cld_ll () {
     case "$1" in
     start)
-        echo "Starting WPSS boot ... $@" > $DUMP_TO_KMSG
-
-        echo 1 > /sys/kernel/icnss/wpss_boot
+        if [ "$MODNAME" != "qca6490" ]; then
+                echo "Starting WPSS boot ... $@" > $DUMP_TO_KMSG
+                echo 1 > /sys/kernel/icnss/wpss_boot
+        fi
 
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
+
+        if [ "$MODNAME" = "qca6490" ]; then
+                echo 1 > /sys/bus/pci/rescan
+        fi
 
         modprobe $MODNAME
 
