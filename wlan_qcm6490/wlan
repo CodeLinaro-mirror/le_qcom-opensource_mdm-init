@@ -40,11 +40,13 @@ DUMP_TO_KMSG=/dev/kmsg
 do_ctrl_cld_ll () {
     case "$1" in
     start)
+        echo "Starting WPSS boot ... $@" > $DUMP_TO_KMSG
+
+        echo 1 > /sys/kernel/icnss/wpss_boot
+
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
 
-	set -e
-	modprobe $MODNAME
-	set +e
+        modprobe $MODNAME
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
@@ -61,7 +63,7 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
-	wpa_supplicant -Dnl80211 -iwlan0 -ddd -c /etc/wpa_supplicant.conf -f /tmp/wpa_supplicant-log.txt &
+	wpa_supplicant -Dnl80211 -iwlan0 -ddd -c /etc/wpa_supplicant.conf -t -f /tmp/wpa_supplicant-log.txt &
 
 	dhcpcd wlan0
 
