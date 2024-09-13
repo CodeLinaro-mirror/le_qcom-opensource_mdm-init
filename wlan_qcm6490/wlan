@@ -32,7 +32,11 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export MODNAME=wlan
+#To load qcacld driver make MODNAME=wlan
+#export MODNAME=wlan
+
+#MODNAME=ath11k_ahb indicates upstream ath11k driver is being loaded
+export MODNAME=ath11k_ahb
 export RETRY_LIMIT=20
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
@@ -65,7 +69,6 @@ do_ctrl_cld_ll () {
 
 	wpa_supplicant -Dnl80211 -iwlan0 -ddd -c /etc/wpa_supplicant.conf -t -f /tmp/wpa_supplicant-log.txt &
 
-	dhcpcd wlan0
 
         cnt=0
         while ! [ -d /var/run/wpa_supplicant ]
@@ -100,8 +103,9 @@ do_ctrl_cld_ll () {
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
 	killall wpa_supplicant
-	killall dhcpcd
-	rmmod $MODNAME
+        if [ "$MODNAME" = "wlan" ]; then
+            rmmod $MODNAME
+        fi
         ;;
 
     restart)
