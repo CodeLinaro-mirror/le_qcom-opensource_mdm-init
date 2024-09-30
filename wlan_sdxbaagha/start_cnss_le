@@ -39,6 +39,16 @@ set -e
 
 case "$1" in
   start)
+	# perf the requirement from IPA team, let's disable WLAN IPA if device is ETH PDU - IDP and subtype is 5
+	if [ $(cat /sys/devices/soc0/hw_platform) = IDP ] && [ $(cat /sys/devices/soc0/platform_subtype_id) = 5 ];then
+		ini_path=/etc/misc/wifi/WCNSS_qcom_cfg.ini
+		ini_item=gIPAConfig
+		ini_value=0
+		update_ini_cmd="grep -q $ini_item $ini_path && sed -i '/$ini_item=/c $ini_item=$ini_value' $ini_path || sed -i '3i $ini_item=$ini_value' $ini_path"
+		eval $update_ini_cmd
+		echo -n "Disabled WLAN IPA" > /dev/kmsg
+	fi
+
 	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
                 echo -n "cnss: Rome device " > /dev/kmsg
 		for dirlist in $(ls "/lib/modules/"); do
