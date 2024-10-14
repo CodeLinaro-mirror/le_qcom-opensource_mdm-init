@@ -30,12 +30,22 @@ do_ctrl_cld_ll () {
             if [ ! -f $INIPATH/$MODNAME/WCNSS_qcom_cfg.ini ]; then
                 ln -s $INIPATH/WCNSS_qcom_cfg.ini.msl $INIPATH/$MODNAME/WCNSS_qcom_cfg.ini
             fi
+
+            BDF_PATH=/firmware/image/qca6750
+            if [ ! -f $BDF_PATH/bdwlan.elf.def ]; then
+                mount -o remount,rw /firmware
+                cp $BDF_PATH/bdwlan.elf $BDF_PATH/bdwlan.elf.def
+                cp $BDF_PATH/bdwlan.e19 $BDF_PATH/bdwlan.elf
+                mount -o remount,ro /firmware
+            fi
+
             echo "Write 1 to Wpss_boot $@" > $DUMP_TO_KMSG
             echo 1 > /sys/devices/platform/soc/17a10040.qcom,wcn6750/wpss_boot
         else
             echo "Write WLAN fs_ready $@" > $DUMP_TO_KMSG
             echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-qca6490/fs_ready
         fi
+
         set -e
         insmod $MODULE_BASE/extra/$MODNAME.ko $@
         set +e
@@ -61,6 +71,35 @@ do_ctrl_cld_ll () {
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
             iw dev wlan0 interface add wlan1 type __ap
             ifconfig wlan1 up 2> /dev/null
+        fi
+
+        # temp change added
+        cnt=0
+        while ! [ -d /var/run/wpa_supplicant ]
+        do
+            echo "waiting for /var/run/wpa_supplicant to mount"
+            sleep 1
+            cnt=`expr $cnt + 1`
+            if [ $cnt -ge 10 ]
+            then
+                break;
+            fi
+        done
+        if [ -d /var/run/wpa_supplicant ]
+        then
+            echo "Setting permission for wpa_supplicant folders" > $DUMP_TO_KMSG
+            chmod 755 /var/run/wpa_supplicant
+            if [ $? -ne 0 ]
+            then
+                echo "ERROR failed chmod of wpa_supplicant" > $DUMP_TO_KMSG
+            fi
+            chmod 777 /var/run/wpa_supplicant/wlan0
+            if [ $? -ne 0 ]
+            then
+                echo "ERROR failed chmod of wpa_supplicant/wlan0" > $DUMP_TO_KMSG
+            fi
+        else
+            echo "Error !! /var/run/wpa_supplicant not yet available" > $DUMP_TO_KMSG
         fi
         ;;
 

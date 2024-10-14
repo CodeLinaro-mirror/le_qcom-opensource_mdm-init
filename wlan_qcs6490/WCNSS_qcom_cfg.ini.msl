@@ -7,7 +7,7 @@ gEnableImps=1
 # Enable BMPS or not
 gEnableBmps=1
 
-# Enable PCI gen switch
+# Enable PCI gen switch or not
 g_enable_pci_gen=1
 
 # Phy Mode (auto, b, g, n, etc)
