@@ -26,8 +26,8 @@ else
 if IS_SDXLEMUR
 dirs = wlan_sdxlemur
 else
-if IS_SXRNEO
-dirs = wlan_sxrneo
+if IS_NEO
+dirs = wlan_neo
 else
 if IS_SDXPINN
 dirs = wlan_sdxpinn
