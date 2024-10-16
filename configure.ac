@@ -75,11 +75,11 @@ AC_ARG_ENABLE([target-sdxlemur],
 	[target_sdxlemur="${enableval}"],
 	target_sdxlemur=no)
 
-AC_ARG_ENABLE([target-sxrneo],
-	AC_HELP_STRING([--enable-target-sxrneo],
-		[Enable conditional compile for target sxrneo]),
-	[target_sxrneo="${enableval}"],
-	target_sxrneo=no)
+AC_ARG_ENABLE([target-neo],
+	AC_HELP_STRING([--enable-target-neo],
+		[Enable conditional compile for target neo]),
+	[target_neo="${enableval}"],
+	target_neo=no)
 
 AC_ARG_ENABLE([target-sdxpinn],
 	AC_HELP_STRING([--enable-target-sdxpinn],
@@ -109,7 +109,7 @@ AM_CONDITIONAL([IS_SDMSTEPPE], [test "x$target_sdmsteppe" = xyes])
 
 AM_CONDITIONAL([IS_SDXLEMUR], [test "x$target_sdxlemur" = xyes])
 
-AM_CONDITIONAL([IS_SXRNEO], [test "x$target_sxrneo" = xyes])
+AM_CONDITIONAL([IS_NEO], [test "x$target_neo" = xyes])
 
 AM_CONDITIONAL([IS_SDXPINN], [test "x$target_sdxpinn" = xyes])
 
@@ -146,8 +146,8 @@ AM_COND_IF([IS_SDXLEMUR],
         [AC_CONFIG_FILES([wlan_sdxlemur/Makefile])])
 AC_OUTPUT
 
-AM_COND_IF([IS_SXRNEO],
-        [AC_CONFIG_FILES([wlan_sxrneo/Makefile])])
+AM_COND_IF([IS_NEO],
+        [AC_CONFIG_FILES([wlan_neo/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_SDXPINN],
