@@ -35,7 +35,11 @@ else
 if IS_KALAMA
 dirs = wlan_kalama
 else
+if IS_PINEAPPLE
+dirs = wlan_pineapple
+else
 dirs = wlan
+endif
 endif
 endif
 endif
