@@ -81,9 +81,9 @@ do_ctrl_cld_ll () {
 
 
         cnt=0
-        while ! [ -d /var/run/sockets ]
+        while ! [ -d /var/run/wpa_supplicant ]
         do
-            echo "waiting for /var/run/sockets to mount"
+            echo "waiting for /var/run/wpa_supplicant to mount"
             sleep 1
             cnt=`expr $cnt + 1`
             if [ $cnt -ge 10 ]
@@ -92,21 +92,21 @@ do_ctrl_cld_ll () {
             fi
         done
 
-       if [ -d /var/run/sockets ]
+       if [ -d /var/run/wpa_supplicant ]
        then
-            echo "Setting permission for sockets folders" > $DUMP_TO_KMSG
-            chmod 755 /var/run/sockets
+            echo "Setting permission for wpa_supplicant folders" > $DUMP_TO_KMSG
+            chmod 755 /var/run/wpa_supplicant
             if [ $? -ne 0 ]
             then
-                echo "ERROR failed chmod of sockets" > $DUMP_TO_KMSG
+                echo "ERROR failed chmod of wpa_supplicant" > $DUMP_TO_KMSG
             fi
-            chmod 777 /var/run/sockets/wlan0
+            chmod 777 /var/run/wpa_supplicant/wlan0
             if [ $? -ne 0 ]
             then
-                echo "ERROR failed chmod of sockets/wlan0" > $DUMP_TO_KMSG
+                echo "ERROR failed chmod of wpa_supplicant/wlan0" > $DUMP_TO_KMSG
             fi
         else
-            echo "Error !! /var/run/sockets not yet available" > $DUMP_TO_KMSG
+            echo "Error !! /var/run/wpa_supplicant not yet available" > $DUMP_TO_KMSG
         fi
         ;;
 
