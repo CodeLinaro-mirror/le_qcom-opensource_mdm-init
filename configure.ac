@@ -93,6 +93,12 @@ AC_ARG_ENABLE([target-kalama],
 	[target_kalama="${enableval}"],
 	target_kalama=no)
 
+AC_ARG_ENABLE([target-pineapple],
+	AC_HELP_STRING([--enable-target-pineapple],
+		[Enable conditional compile for target pineapple]),
+	[target_pineapple="${enableval}"],
+	target_pineapple=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -114,6 +120,8 @@ AM_CONDITIONAL([IS_NEO], [test "x$target_neo" = xyes])
 AM_CONDITIONAL([IS_SDXPINN], [test "x$target_sdxpinn" = xyes])
 
 AM_CONDITIONAL([IS_KALAMA], [test "x$target_kalama" = xyes])
+
+AM_CONDITIONAL([IS_PINEAPPLE], [test "x$target_pineapple" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -156,4 +164,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_KALAMA],
         [AC_CONFIG_FILES([wlan_kalama/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_PINEAPPLE],
+        [AC_CONFIG_FILES([wlan_pineapple/Makefile])])
 AC_OUTPUT
