@@ -62,24 +62,31 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=20
+export RETRY_LIMIT=75
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
+WLAN_MODULE=qca_cld3_kiwi_v2
 
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
-	echo "WPSS Auto load disabled... $@" > $DUMP_TO_KMSG
-#	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
-#wpss_boot for MSL
-#	echo 1 > /sys/kernel/icnss/wpss_boot
-#fs_ready for kiwi_v2
+	echo "Indicate File system ready to CNSS $@" > $DUMP_TO_KMSG
+	#fs_ready for kiwi_v2
 	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-kiwi/fs_ready
 	do_ctrl_cld_ll start
 	;;
 
     start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
+	if [ $( cat /proc/modules | grep -c $WLAN_MODULE ) -ne 0 ]; then
+		echo "module $WLAN_MODULE already loaded" > $DUMP_TO_KMSG
+	else
+		set -e
+		insmod $MODULE_BASE/extra/$WLAN_MODULE.ko $@
+		set +e
+		echo "module $WLAN_MODULE loaded" > $DUMP_TO_KMSG
+	fi
+
         shift
         start_ap1=0
         if [ "$1" == "ap,ap" ] || [ "$1" == "sta,ap" ]; then
@@ -91,16 +98,16 @@ do_ctrl_cld_ll () {
             return 1
         fi
 
-        sleep 1
-
         c=1
-        ifconfig wlan0 up 2>  /dev/null
-        rc=$?
-        while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
-            sleep 1
-            ifconfig wlan0 up 2> /dev/null
-            rc=$?
-            c=`expr $c + 1`
+        while [ $c -le $RETRY_LIMIT ]; do
+	    ifconfig wlan0 up 2> /dev/null
+	    rc=$?
+	    if [ "$rc" -eq "0" ]; then
+	        break
+	    else
+	        sleep .2
+	    fi
+	    c=`expr $c + 1`
         done
 
         if [ $c -gt $RETRY_LIMIT ]; then
@@ -121,7 +128,7 @@ do_ctrl_cld_ll () {
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        rmmod $WLAN_MODULE
         ;;
 
     restart)
