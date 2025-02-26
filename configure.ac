@@ -105,6 +105,12 @@ AC_ARG_ENABLE([target-qcm2290-mtp],
         [target_qcm2290mtp="${enableval}"],
         target_qcm2290mtp=no)
 
+AC_ARG_ENABLE([target-qcm4325-mtp],
+        AC_HELP_STRING([--enable-target-qcm4325-mtp],
+                [Enable conditional compile for target qcm4325mtp]),
+        [target_qcm4325mtp="${enableval}"],
+        target_qcm4325mtp=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -130,6 +136,8 @@ AM_CONDITIONAL([IS_KALAMA], [test "x$target_kalama" = xyes])
 AM_CONDITIONAL([IS_PINEAPPLE], [test "x$target_pineapple" = xyes])
 
 AM_CONDITIONAL([IS_QCM2290MTP], [test "x$target_qcm2290mtp" = xyes])
+
+AM_CONDITIONAL([IS_QCM4325MTP], [test "x$target_qcm4325mtp" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -180,4 +188,8 @@ AC_OUTPUT
 
 AM_COND_IF([IS_QCM2290MTP],
         [AC_CONFIG_FILES([wlan_qcm2290-mtp/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_QCM4325MTP],
+        [AC_CONFIG_FILES([wlan_qcm4325-mtp/Makefile])])
 AC_OUTPUT

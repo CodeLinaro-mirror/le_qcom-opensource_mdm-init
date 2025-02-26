@@ -41,7 +41,11 @@ else
 if IS_QCM2290MTP
 dirs = wlan_qcm2290-mtp
 else
+if IS_QCM4325MTP
+dirs = wlan_qcm4325-mtp
+else
 dirs = wlan
+endif
 endif
 endif
 endif
