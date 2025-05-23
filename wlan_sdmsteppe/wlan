@@ -26,11 +26,17 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 
 export MODULE_BASE=/lib/modules/`uname -r`
+export MODULE_BASE_ALT=/usr/lib/modules/`uname -r`
 export RETRY_LIMIT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
+WPA_SUPPLICANT_CONFIG=/etc/misc/wifi/wpa_supplicant.conf
+CTRL_INTERFACE_DIR_PATH=/var/run/wpa_supplicant
 
 do_ctrl_cld_ll () {
     case "$1" in
@@ -48,7 +54,13 @@ do_ctrl_cld_ll () {
         fi
 
         set -e
-        insmod $MODULE_BASE/extra/wlan.ko $@
+        if [ -e $MODULE_BASE/extra/wlan.ko ]; then
+            insmod $MODULE_BASE/extra/wlan.ko $@
+        else
+            if [ -e $MODULE_BASE_ALT/wlan.ko ]; then
+                insmod $MODULE_BASE_ALT/wlan.ko $@
+            fi
+        fi
         set +e
 
         c=1
@@ -66,11 +78,32 @@ do_ctrl_cld_ll () {
             exit 1
         fi
 
+        echo "Starting wpa supplicant $@" > $DUMP_TO_KMSG
+        wpa_supplicant -Dnl80211 -iwlan0 -c $WPA_SUPPLICANT_CONFIG -B
+
+        c=1
+        ls $CTRL_INTERFACE_DIR_PATH >  /dev/null
+        rc=$?
+        while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
+            sleep 1
+            ls $CTRL_INTERFACE_DIR_PATH  >  /dev/null
+            rc=$?
+            c=`expr $c + 1`
+        done
+
+        if [ $c -gt $RETRY_LIMIT ]; then
+            echo "Error !! control interface not yet available" > $DUMP_TO_KMSG
+            exit 1
+        fi
+
         if [ $start_ap1 -eq 1 ]; then
             echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
             iw dev wlan0 interface add wlan1 type __ap
             ifconfig wlan1 up 2> /dev/null
         fi
+
+        echo "Starting udhcp client $@" > $DUMP_TO_KMSG
+        udhcpc -i wlan0
         ;;
 
     start_ftm)
@@ -80,6 +113,9 @@ do_ctrl_cld_ll () {
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
+        killall wpa_supplicant
+        killall hostapd
+        killall udhcpc
         rmmod wlan
         ;;
 
