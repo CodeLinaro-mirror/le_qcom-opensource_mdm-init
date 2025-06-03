@@ -1,0 +1,25 @@
+etcdir = ${sysconfdir}
+
+misc_ddir = ${sysconfdir}/misc/wifi
+dist_misc_d_DATA = hostapd-open.conf
+dist_misc_d_DATA += hostapd-wlan1.conf
+dist_misc_d_DATA += hostapd-wlan2.conf
+dist_misc_d_DATA += sta_mode_hostapd.conf
+dist_misc_d_DATA += hostapd.conf
+dist_misc_d_DATA += wpa_supplicant.conf
+dist_misc_d_DATA += hostapd.accept
+dist_misc_d_DATA += hostapd.deny
+dist_misc_d_DATA += p2p_supplicant.conf
+dist_misc_d_DATA += hostapd_besra.conf
+dist_misc_d_DATA += hostapd_sr.conf
+dist_misc_d_DATA += wpa_supplicant_sr.conf
+
+init_ddir = ${sysconfdir}/init.d
+dist_init_d_SCRIPTS = wlan
+
+firmware_ddir = /lib/firmware/wlan/qca_cld
+dist_firmware_d_DATA = WCNSS_qcom_cfg.ini
+firmware_qca9377dir = /lib/firmware/wlan/qca_cld/wlan_sdio
+dist_firmware_qca9377_DATA = WCNSS_qcom_cfg_sdio.ini
+firmware_qcm2290mtpdir = /lib/firmware/wlan/qca_cld/wlan_debug
+dist_firmware_qcm2290mtp_DATA = WCNSS_qcom_cfg.ini

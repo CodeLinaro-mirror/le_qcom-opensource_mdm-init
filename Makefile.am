@@ -38,7 +38,11 @@ else
 if IS_PINEAPPLE
 dirs = wlan_pineapple
 else
+if IS_QCM2290MTP
+dirs = wlan_qcm2290-mtp
+else
 dirs = wlan
+endif
 endif
 endif
 endif
