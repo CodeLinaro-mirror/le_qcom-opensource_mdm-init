@@ -26,10 +26,11 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #
-# Changes from Qualcomm Innovation Center are provided under the following license:
+# Changes from Qualcomm Innovation Center, Inc. are provided under the following license:
 #
-# Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted (subject to the limitations in the
@@ -62,23 +63,18 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=20
+export RETRY_LIMIT=10
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
+MODNAME=wlan
+IFNAME=wlan
 
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
-	echo "WPSS Auto load disabled... $@" > $DUMP_TO_KMSG
-#	echo "Starting WPSS... $@" > $DUMP_TO_KMSG
-#wpss_boot for MSL
-#	echo 1 > /sys/kernel/icnss/wpss_boot
-#fs_ready for kiwi_v2
-	echo 1 > /sys/devices/platform/soc/b0000000.qcom,cnss-kiwi/fs_ready
-	do_ctrl_cld_ll start
-	;;
+        echo "Starting WLAN Calibration... $@" > $DUMP_TO_KMSG
+	echo 1 > /sys/kernel/icnss/wpss_boot
 
-    start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
         shift
         start_ap1=0
@@ -90,15 +86,26 @@ do_ctrl_cld_ll () {
         elif [ "$1" == "ap,sta" ]; then
             return 1
         fi
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            echo "Loading wlan_debug... $@" > $DUMP_TO_KMSG
+            MODNAME=${MODNAME}_debug
+        fi
 
-        sleep 1
+	set -e
+        insmod $MODULE_BASE/${MODNAME}.ko $@
+        set +e
 
         c=1
-        ifconfig wlan0 up 2>  /dev/null
+        ifconfig ${IFNAME}0 up 2>  /dev/null
         rc=$?
         while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
             sleep 1
-            ifconfig wlan0 up 2> /dev/null
+            ifconfig ${IFNAME}0 up 2> /dev/null
             rc=$?
             c=`expr $c + 1`
         done
@@ -109,19 +116,32 @@ do_ctrl_cld_ll () {
         fi
 
         if [ $start_ap1 -eq 1 ]; then
-            echo "Adding second AP interface(wlan1)" > $DUMP_TO_KMSG
-            iw dev wlan0 interface add wlan1 type __ap
-            ifconfig wlan1 up 2> /dev/null
+            echo "Adding second AP interface(${IFNAME}1)" > $DUMP_TO_KMSG
+            iw dev ${IFNAME}0 interface add ${IFNAME}1 type __ap
+            ifconfig ${IFNAME}1 up 2> /dev/null
         fi
         ;;
 
     start_ftm)
-        do_ctrl_cld_ll start con_mode=5
+        do_ctrl_cld_ll stop
+        do_ctrl_cld_ll start
+        echo 5 > /sys/module/wlan/parameters/con_mode
         ;;
 
     stop)
         echo "Stopping WLAN..." > $DUMP_TO_KMSG
-        rmmod wlan
+        killall hostapd
+        killall wpa_supplicant
+        res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
+        mod=$(eval "$res")
+        if [ $mod == "${MODNAME}.ko" ]; then
+            MODNAME=${MODNAME}
+            shift
+        else
+            MODNAME=${MODNAME}_debug
+        fi
+
+        rmmod ${MODNAME}
         ;;
 
     restart)

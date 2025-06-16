@@ -26,8 +26,8 @@ else
 if IS_SDXLEMUR
 dirs = wlan_sdxlemur
 else
-if IS_SXRNEO
-dirs = wlan_sxrneo
+if IS_NEO
+dirs = wlan_neo
 else
 if IS_SDXPINN
 dirs = wlan_sdxpinn
@@ -35,7 +35,15 @@ else
 if IS_KALAMA
 dirs = wlan_kalama
 else
+if IS_PINEAPPLE
+dirs = wlan_pineapple
+else
+if IS_QCM2290MTP
+dirs = wlan_qcm2290-mtp
+else
 dirs = wlan
+endif
+endif
 endif
 endif
 endif
