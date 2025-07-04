@@ -11,6 +11,7 @@ dist_misc_d_DATA += hostapd-wlan3.conf
 dist_misc_d_DATA += sta_mode_hostapd.conf
 dist_misc_d_DATA += wpa_supplicant.conf
 dist_misc_d_DATA += WCNSS_qcom_cfg.ini
+dist_misc_d_DATA += WCNSS_qcom_cfg.Rome.ini
 
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = wlan
