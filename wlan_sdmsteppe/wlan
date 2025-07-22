@@ -36,7 +36,6 @@ export RETRY_LIMIT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 WPA_SUPPLICANT_CONFIG=/etc/misc/wifi/wpa_supplicant.conf
-CTRL_INTERFACE_DIR_PATH=/var/run/wpa_supplicant
 
 do_ctrl_cld_ll () {
     case "$1" in
@@ -82,17 +81,19 @@ do_ctrl_cld_ll () {
         wpa_supplicant -Dnl80211 -iwlan0 -c $WPA_SUPPLICANT_CONFIG -B
 
         c=1
-        ls $CTRL_INTERFACE_DIR_PATH >  /dev/null
-        rc=$?
-        while [ $rc -ne 0 -a $c -le $RETRY_LIMIT ]; do
+        rc=$(iw wlan0 link)
+        echo "$rc"
+        while [ "$rc" == "Not connected." -a $c -le $RETRY_LIMIT ]; do
             sleep 1
-            ls $CTRL_INTERFACE_DIR_PATH  >  /dev/null
-            rc=$?
+            rc=$(iw wlan0 link)
             c=`expr $c + 1`
+            echo "$rc"
         done
 
         if [ $c -gt $RETRY_LIMIT ]; then
             echo "Error !! control interface not yet available" > $DUMP_TO_KMSG
+            killall wpa_supplicant
+            rmmod wlan
             exit 1
         fi
 
