@@ -111,6 +111,12 @@ AC_ARG_ENABLE([target-kera],
         [target_kera="${enableval}"],
         target_kera=no)
 
+AC_ARG_ENABLE([target-sun],
+        AC_HELP_STRING([--enable-target-sun],
+                [Enable conditional compile for target sun]),
+        [target_sun="${enableval}"],
+        target_sun=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -138,6 +144,8 @@ AM_CONDITIONAL([IS_PINEAPPLE], [test "x$target_pineapple" = xyes])
 AM_CONDITIONAL([IS_QCM2290MTP], [test "x$target_qcm2290mtp" = xyes])
 
 AM_CONDITIONAL([IS_KERA], [test "x$target_kera" = xyes])
+
+AM_CONDITIONAL([IS_SUN], [test "x$target_sun" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -208,6 +216,12 @@ AM_COND_IF([IS_KERA], [
 	AC_CONFIG_FILES([wlan_kera/Makefile])
 	install_dir="wlan_kera"
 ])
+
+AM_COND_IF([IS_SUN], [
+	AC_CONFIG_FILES([wlan_sun/Makefile])
+	install_dir="wlan_sun"
+])
+
 
 # Final output
 AC_SUBST([install_dir])
