@@ -105,6 +105,12 @@ AC_ARG_ENABLE([target-qcm2290-mtp],
         [target_qcm2290mtp="${enableval}"],
         target_qcm2290mtp=no)
 
+AC_ARG_ENABLE([target-kera],
+        AC_HELP_STRING([--enable-target-kera],
+                [Enable conditional compile for target kera]),
+        [target_kera="${enableval}"],
+        target_kera=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -131,53 +137,79 @@ AM_CONDITIONAL([IS_PINEAPPLE], [test "x$target_pineapple" = xyes])
 
 AM_CONDITIONAL([IS_QCM2290MTP], [test "x$target_qcm2290mtp" = xyes])
 
+AM_CONDITIONAL([IS_KERA], [test "x$target_kera" = xyes])
+
 AC_CONFIG_FILES([Makefile])
 
-AM_COND_IF([IS_MDM9607],
-	[AC_CONFIG_FILES([wlan_sdio/Makefile])],
-	[AC_CONFIG_FILES([wlan/Makefile])])
+# Collect install dir, wlan as default dir
+install_dir="wlan"
+
+AM_COND_IF([IS_MDM9607], [
+	AC_CONFIG_FILES([wlan_sdio/Makefile])
+	install_dir="wlan_sdio"
+])
+
+AM_COND_IF([IS_PRONTO_ENABLED], [
+	AC_CONFIG_FILES([wlan_pronto/Makefile])
+	install_dir="wlan_prontoe"
+])
+
+AM_COND_IF([IS_DRONE], [
+	AC_CONFIG_FILES([wlan_drone/Makefile])
+	install_dir="wlan_drone"
+])
+
+AM_COND_IF([IS_QCS405SOM1], [
+	AC_CONFIG_FILES([wlan_qcs405-som1_qsap/Makefile])
+	install_dir="wlan_qcs405-som1_qsap"
+])
+
+AM_COND_IF([IS_SDMSTEPPE], [
+	AC_CONFIG_FILES([wlan_sdmsteppe/Makefile])
+	install_dir="wlan_sdmsteppe"
+])
+
+AM_COND_IF([IS_QRB5165], [
+	AC_CONFIG_FILES([wlan_qrb5165/Makefile])
+	install_dir="wlan_qrb5165"
+])
+
+AM_COND_IF([IS_SDXLEMUR], [
+	AC_CONFIG_FILES([wlan_sdxlemur/Makefile])
+	install_dir="wlan_sdxlemur"
+])
+
+AM_COND_IF([IS_NEO], [
+	AC_CONFIG_FILES([wlan_neo/Makefile])
+	install_dir="wlan_neo"
+])
+
+AM_COND_IF([IS_SDXPINN], [
+	AC_CONFIG_FILES([wlan_sdxpinn/Makefile])
+	install_dir="wlan_sdxpinn"
+])
+
+AM_COND_IF([IS_KALAMA], [
+	AC_CONFIG_FILES([wlan_kalama/Makefile])
+	install_dir="wlan_kalama"
+])
+
+AM_COND_IF([IS_PINEAPPLE], [
+	AC_CONFIG_FILES([wlan_pineapple/Makefile])
+	install_dir="wlan_pineapple"
+])
+
+AM_COND_IF([IS_QCM2290MTP], [
+	AC_CONFIG_FILES([wlan_qcm2290-mtp/Makefile])
+	install_dir="wlan_qcm2290-mtp"
+])
+
+AM_COND_IF([IS_KERA], [
+	AC_CONFIG_FILES([wlan_kera/Makefile])
+	install_dir="wlan_kera"
+])
+
+# Final output
+AC_SUBST([install_dir])
 AC_OUTPUT
 
-AM_COND_IF([IS_PRONTO_ENABLED],
-	[AC_CONFIG_FILES([wlan_pronto/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_DRONE],
-	[AC_CONFIG_FILES([wlan_drone/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_QCS405SOM1],
-	[AC_CONFIG_FILES([wlan_qcs405-som1_qsap/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_SDMSTEPPE],
-	[AC_CONFIG_FILES([wlan_sdmsteppe/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_QRB5165],
-	[AC_CONFIG_FILES([wlan_qrb5165/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_SDXLEMUR],
-        [AC_CONFIG_FILES([wlan_sdxlemur/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_NEO],
-        [AC_CONFIG_FILES([wlan_neo/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_SDXPINN],
-        [AC_CONFIG_FILES([wlan_sdxpinn/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_KALAMA],
-        [AC_CONFIG_FILES([wlan_kalama/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_PINEAPPLE],
-        [AC_CONFIG_FILES([wlan_pineapple/Makefile])])
-AC_OUTPUT
-
-AM_COND_IF([IS_QCM2290MTP],
-        [AC_CONFIG_FILES([wlan_qcm2290-mtp/Makefile])])
-AC_OUTPUT
