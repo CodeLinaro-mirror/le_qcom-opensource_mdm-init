@@ -34,17 +34,32 @@ set -e
 
 case "$1" in
   start)
-        echo -n "Loading cnss platform driver: "
-
-        if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko ];
-        then
-                echo "Load cnss platform driver " > /dev/kmsg
-                insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko
-        else
-                echo "cnss module does not exist "
-        fi
-
-        echo "Done loading cnss platform driver "
+	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
+		echo -n "cnss: Rome device " > /dev/kmsg
+		if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss/cnss.ko ];
+		then
+			echo "Load cnss platform driver " > /dev/kmsg
+			insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss/cnss.ko
+			insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss/logger/logger.ko
+		else
+			echo "cnss module does not exist "
+		fi
+		/sbin/mount-copybind /systemrw/misc/wifi/WCNSS_qcom_cfg.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+		/sbin/mount-copybind /systemrw/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini
+		if [ ! -f /systemrw/misc/wifi/WCNSS_qcom_cfg.hsp.ini ]; then
+			cp /systemrw/misc/wifi/WCNSS_qcom_cfg.ini /systemrw/misc/wifi/WCNSS_qcom_cfg.hsp.ini
+			cp /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+		fi
+	else
+		if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko ];
+		then
+			echo "Load cnss platform driver " > /dev/kmsg
+			insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss2/cnss2.ko
+		else
+			echo "cnss module does not exist "
+		fi
+	fi
+         echo "Done loading cnss platform driver "
         ;;
   stop)
         echo -n "Unloading cnss platform driver "
