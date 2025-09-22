@@ -52,24 +52,15 @@ do_ctrl_cld_ll () {
             return 1
         fi
 
-        echo "Checking WLAN is already loaded..." > $DUMP_TO_KMSG
-        ifconfig wlan0 up 2>  /dev/null
-        rc=$?
-        if [ $rc -ne 0 ]; then
-            echo "WLAN is not loaded. Loading now..." > $DUMP_TO_KMSG
-            set -e
-            if [ -e $MODULE_BASE/extra/wlan.ko ]; then
-                insmod $MODULE_BASE/extra/wlan.ko $@
-            else
-                if [ -e $MODULE_BASE_ALT/wlan.ko ]; then
-                    insmod $MODULE_BASE_ALT/wlan.ko $@
-                fi
-            fi
-            set +e
-            echo "WLAN is successfully loaded." > $DUMP_TO_KMSG
+        set -e
+        if [ -e $MODULE_BASE/extra/wlan.ko ]; then
+            insmod $MODULE_BASE/extra/wlan.ko $@
         else
-            echo "WLAN is already loaded." > $DUMP_TO_KMSG
+            if [ -e $MODULE_BASE_ALT/wlan.ko ]; then
+                insmod $MODULE_BASE_ALT/wlan.ko $@
+            fi
         fi
+        set +e
 
         c=1
         ifconfig wlan0 up 2>  /dev/null
@@ -89,7 +80,6 @@ do_ctrl_cld_ll () {
         echo "Starting wpa supplicant $@" > $DUMP_TO_KMSG
         wpa_supplicant -Dnl80211 -iwlan0 -c $WPA_SUPPLICANT_CONFIG -B
 
-        echo "Checking WLAN is in connected mode..." > $DUMP_TO_KMSG
         c=1
         rc=$(iw wlan0 link)
         echo "$rc"
@@ -101,8 +91,9 @@ do_ctrl_cld_ll () {
         done
 
         if [ $c -gt $RETRY_LIMIT ]; then
-            echo "Error !! WLAN is not connected. " > $DUMP_TO_KMSG
+            echo "Error !! control interface not yet available" > $DUMP_TO_KMSG
             killall wpa_supplicant
+            rmmod wlan
             exit 1
         fi
 
