@@ -76,6 +76,9 @@ do_ctrl_cld_ll () {
             echo "WLAN bring-up failed!" > $DUMP_TO_KMSG
             exit 1
         fi
+
+        echo "Set Wake On Wireless Pattern ... $@" > $DUMP_TO_KMSG
+        iw phy0 wowlan enable magic-packet
         ;;
 
     stop)
