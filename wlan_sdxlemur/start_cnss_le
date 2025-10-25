@@ -37,6 +37,28 @@ case "$1" in
         if [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss-qca)" ];
         then
                 echo -n "Loading cnss platform driver: "
+        elif [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss)" ];
+        then
+                echo "CNSS Rome platform" > /dev/kmsg
+                mkdir -p /systemrw/wlan/bin/
+                ln -sf /usr/sbin/mcc/* /systemrw/wlan/bin/
+                if [ -f $MODULE_BASE/kernel/drivers/net/wireless/cnss/cnss.ko ];
+                then
+                    insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss/cnss.ko
+                    insmod $MODULE_BASE/kernel/drivers/net/wireless/cnss/logger/logger.ko
+                    echo "Load cnss platform driver success" > /dev/kmsg
+                else
+                    echo "Rome CNSS platform not exist" > /dev/kmsg
+                fi
+                /sbin/mount-copybind /systemrw/misc/wifi/WCNSS_qcom_cfg.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+                /sbin/mount-copybind /systemrw/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini
+                if [ ! -f /systemrw/misc/wifi/WCNSS_qcom_cfg.hsp.ini ];
+                then
+                    cp /systemrw/misc/wifi/WCNSS_qcom_cfg.ini /systemrw/misc/wifi/WCNSS_qcom_cfg.hsp.ini
+                    cp /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+                fi
+                echo "Update Rome configure done" > /dev/kmsg
+                exit 0
         else
                 echo -n "No MCC chip"
                 exit 0
