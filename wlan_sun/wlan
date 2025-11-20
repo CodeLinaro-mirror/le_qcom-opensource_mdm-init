@@ -34,16 +34,15 @@
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 #
 export MODULE_BASE=/lib/modules/`uname -r`
-export RETRY_LIMIT=10
+export RETRY_LIMIT=15
 HELP="Usage $0 {start | stop | restart} <ap | sta,ap>"
 DUMP_TO_KMSG=/dev/kmsg
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
         echo "Starting WLAN Calibration... $@" > $DUMP_TO_KMSG
-	echo 1 > /sys/kernel/cnss/fs_ready
-	sleep 5
-#	do_ctrl_cld_ll start
+        echo 1 > /sys/kernel/cnss/fs_ready
+#       do_ctrl_cld_ll start
 	;;
     start)
         echo "Starting WLAN... $@" > $DUMP_TO_KMSG
