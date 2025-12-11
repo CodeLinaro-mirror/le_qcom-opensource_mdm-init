@@ -37,7 +37,7 @@ case "$1" in
         if [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss-qca)" ];
         then
                 echo -n "Loading cnss platform driver: "
-        elif [ "$(ls -A "/sys/devices/platform" | grep qcom,cnss)" ];
+        elif [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];
         then
                 echo "CNSS Rome platform" > /dev/kmsg
                 mkdir -p /systemrw/wlan/bin/
