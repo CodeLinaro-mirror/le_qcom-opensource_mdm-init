@@ -5,4 +5,5 @@ dist_etc_DATA += wpa_supplicant.conf
 
 init_ddir = ${sysconfdir}/init.d
 dist_init_d_SCRIPTS = wlan
+dist_init_d_SCRIPTS += multi-vif-helper.sh
 
