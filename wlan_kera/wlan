@@ -42,8 +42,17 @@ IFNAME=wlan
 do_ctrl_cld_ll () {
     case "$1" in
     init-start)
-        echo "Starting WLAN Calibration..." > $DUMP_TO_KMSG
-        echo 1 > /sys/kernel/icnss/wpss_boot
+        #checking WLAN chip ID
+        chip_id=$(lspci -n | grep "17cb:1112")
+        if [ -n "$chip_id" ]; then
+            echo "Detected wcn7760 chip" > $DUMP_TO_KMSG
+            MODNAME=qca_cld3_wcn7760
+            echo 1 > /sys/kernel/cnss/fs_ready
+            sleep 1
+        else
+            echo "Starting WLAN Calibration..." > $DUMP_TO_KMSG
+            echo 1 > /sys/kernel/icnss/wpss_boot
+        fi
 
         res='ls $MODULE_BASE/ | grep ${MODNAME}.ko'
         mod=$(eval "$res")
