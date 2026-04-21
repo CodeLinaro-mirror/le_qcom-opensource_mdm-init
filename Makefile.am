@@ -32,8 +32,8 @@ else
 if IS_SDXPINN
 dirs = wlan_sdxpinn
 else
-if IS_SDXECHO
-dirs = wlan_sdxecho
+if IS_ECHO
+dirs = wlan_echo
 else
 dirs = wlan
 endif
