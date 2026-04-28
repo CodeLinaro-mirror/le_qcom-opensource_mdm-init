@@ -87,11 +87,11 @@ AC_ARG_ENABLE([target-sdxpinn],
 	[target_sdxpinn="${enableval}"],
 	target_sdxpinn=no)
 
-AC_ARG_ENABLE([target-sdxecho],
-	AC_HELP_STRING([--enable-target-sdxecho],
-		[Enable conditional compile for target sdxecho]),
-	[target_sdxecho="${enableval}"],
-	target_sdxecho=no)
+AC_ARG_ENABLE([target-echo],
+	AC_HELP_STRING([--enable-target-echo],
+		[Enable conditional compile for target echo]),
+	[target_echo="${enableval}"],
+	target_echo=no)
 
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
@@ -113,7 +113,7 @@ AM_CONDITIONAL([IS_SXRNEO], [test "x$target_sxrneo" = xyes])
 
 AM_CONDITIONAL([IS_SDXPINN], [test "x$target_sdxpinn" = xyes])
 
-AM_CONDITIONAL([IS_SDXECHO], [test "x$target_sdxecho" = xyes])
+AM_CONDITIONAL([IS_ECHO], [test "x$target_echo" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -154,6 +154,6 @@ AM_COND_IF([IS_SDXPINN],
         [AC_CONFIG_FILES([wlan_sdxpinn/Makefile])])
 AC_OUTPUT
 
-AM_COND_IF([IS_SDXECHO],
-        [AC_CONFIG_FILES([wlan_sdxecho/Makefile])])
+AM_COND_IF([IS_ECHO],
+        [AC_CONFIG_FILES([wlan_echo/Makefile])])
 AC_OUTPUT
