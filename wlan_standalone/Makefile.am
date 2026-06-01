@@ -25,7 +25,7 @@ dist_firmware_d_DATA += QCA6595.LE.0.1_Genoa_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA6698AU.LE.1.1_HastingPrime_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA67x7AU.LE.1.0_Hamilton_PCIe_qcacld-3.0-iMX8.ini
 dist_firmware_d_DATA += QCA67x7AU.LE.1.1_Hamilton_PCIe_qcacld-3.0-iMX8.ini
-
+dist_firmware_d_DATA += WCN8851.LE.1.0_Congo_PCIe_qcacld-3.0-iMX8.ini
 if NEED_SDIO_INI
 
 # Copy qcom_cfg.sdio.ini to ../firmware/wlan/qca9377/
