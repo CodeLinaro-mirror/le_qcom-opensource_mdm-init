@@ -27,15 +27,78 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Changes from Qualcomm Innovation Center are provided under the following license:
-
-# Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+# Changes from Qualcomm Technologies, Inc. are provided under the following license:
+# Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 # SPDX-License-Identifier: BSD-3-Clause-Clear
 
 # cnss module init.d script
 
 export MODULE_BASE=/lib/modules/`uname -r`/
 set -e
+
+update_cnss_config(){
+	bus_type_path="/etc/misc/wifi/wlan_bus_type"
+	dev_type="HSP"
+	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
+		dev_type="ROME"
+	fi
+
+	bus_type="PCIe"
+	if [ -f "${bus_type_path}" ] && [ $(cat "${bus_type_path}" | grep -ic SDIO) = 1 ];then
+		bus_type="SDIO"
+	fi
+
+	module_dirs=$(ls "/lib/modules/")
+	type_comb="${dev_type}_${bus_type}"
+
+	case "${type_comb}" in
+	"ROME_PCIe")
+		echo -n "cnss: ${type_comb} device " > /dev/kmsg
+		for dir in $module_dirs; do
+			rome_module="/lib/modules/${dir}/extra/wlan_rome.ko"
+			if [ -f "$rome_module" ] && [ -z "$(grep wlan_rome /lib/wifi/qcacld32-modules)" ]; then
+				rm -f /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				rm -f /etc/misc/wifi/qcacld32-modules
+				ln -sf /etc/misc/wifi/qcacld32-modules.rome /etc/misc/wifi/qcacld32-modules
+				echo -n "cnss: Update to Rome PCIe config" > /dev/kmsg
+				break
+			fi
+		done
+		;;
+
+	"ROME_SDIO")
+		echo -n "cnss: ${type_comb} device " > /dev/kmsg
+		for dir in $module_dirs; do
+			rome_sdio_module="/lib/modules/${dir}/extra/wlan_sdio.ko"
+			if [ -f "$rome_sdio_module" ] && [ -z "$(grep wlan_sdio /lib/wifi/qcacld32-modules)" ]; then
+				rm -rf /etc/misc/wifi/qcacld32-modules
+				ln -sf /etc/misc/wifi/qcacld32-modules.rome.sdio /etc/misc/wifi/qcacld32-modules
+				echo -n "cnss: Update to Rome SDIO config" > /dev/kmsg
+				break
+			fi
+		done
+		;;
+
+	*)
+		echo -n "cnss: ${type_comb} device" > /dev/kmsg
+		# Kuno+HSP doesn't support 11be
+		grep -q 11bea /etc/misc/wifi/6g_wireless && sed -i 's/11bea/11axa/' /etc/misc/wifi/6g_wireless
+
+		for dir in $module_dirs; do
+			hsp_module="/lib/modules/${dir}/extra/wlan.ko"
+			if [ -f "$hsp_module" ] && [ -n "$(grep wlan_rome /lib/wifi/qcacld32-modules)" ]; then
+				rm -f /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.hsp.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
+				rm -rf /etc/misc/wifi/qcacld32-modules
+				ln -sf /etc/misc/wifi/qcacld32-modules.hsp /etc/misc/wifi/qcacld32-modules
+				echo -n "cnss: update to HSP config" > /dev/kmsg
+				break
+			fi
+		done
+		;;
+	esac
+}
 
 case "$1" in
   start)
@@ -49,49 +112,20 @@ case "$1" in
 		echo -n "Disabled WLAN IPA" > /dev/kmsg
 	fi
 
-	if [ $(cat /sys/firmware/devicetree/base/model | grep -c ROME) = 1 ];then
-                echo -n "cnss: Rome device " > /dev/kmsg
-		for dirlist in $(ls "/lib/modules/"); do
-			rome_name="/lib/modules/${dirlist}/extra/wlan_rome.ko"
-			if [ -f $rome_name ] && [ -z "$(echo `cat /lib/wifi/qcacld32-modules | grep wlan_rome`)" ]; then
-				rm -rf /etc/misc/wifi/WCNSS_qcom_cfg.ini
-				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.Rome.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
-				rm -rf /etc/misc/wifi/qcacld32-modules
-				ln -sf /etc/misc/wifi/qcacld32-modules.rome /etc/misc/wifi/qcacld32-modules
-				echo -n "cnss: Update to rome config" > /dev/kmsg
-			fi
-		done
-        else
-		echo -n "cnss: HSP device" > /dev/kmsg
-
-		# Kuno+HSP doesn't support 11be
-		grep -q 11bea /etc/misc/wifi/6g_wireless && sed -i 's/11bea/11axa/' /etc/misc/wifi/6g_wireless
-
-		for dirlist in $(ls "/lib/modules/"); do
-			hsp_name="/lib/modules/${dirlist}/extra/wlan.ko"
-			if [ -f $hsp_name ] && [ -n "$(echo `cat /lib/wifi/qcacld32-modules | grep wlan_rome`)" ]; then
-				rm -rf /etc/misc/wifi/WCNSS_qcom_cfg.ini
-				ln -sf /etc/misc/wifi/WCNSS_qcom_cfg.hsp.ini /etc/misc/wifi/WCNSS_qcom_cfg.ini
-				rm -rf /etc/misc/wifi/qcacld32-modules
-				ln -sf /etc/misc/wifi/qcacld32-modules.hsp /etc/misc/wifi/qcacld32-modules
-				echo -n "cnss: update to HSP config" > /dev/kmsg
-			fi
-		done
-        fi
-
-        echo "Update cnss config done" > /dev/kmsg
-        ;;
+	update_cnss_config
+	echo "Update cnss config done" > /dev/kmsg
+	;;
   stop)
-        echo -n "Unloading cnss platform driver "
-        ;;
+	echo -n "Unloading cnss platform driver "
+	;;
   restart)
-        $0 stop
-        $0 start
-        ;;
+	$0 stop
+	$0 start
+	;;
   *)
-        echo "Usage { start | stop | restart}" >&2
-        exit 1
-        ;;
+	echo "Usage { start | stop | restart}" >&2
+	exit 1
+	;;
 esac
 
 exit 0
