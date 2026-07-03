@@ -99,6 +99,12 @@ AC_ARG_ENABLE([target-pineapple],
 	[target_pineapple="${enableval}"],
 	target_pineapple=no)
 
+AC_ARG_ENABLE([target-seraph],
+	AC_HELP_STRING([--enable-target-seraph],
+		[Enable conditional compile for target seraph]),
+	[target_seraph="${enableval}"],
+	target_seraph=no)
+
 AC_ARG_ENABLE([target-qcm2290-mtp],
         AC_HELP_STRING([--enable-target-qcm2290-mtp],
                 [Enable conditional compile for target qcm2290mtp]),
@@ -128,6 +134,8 @@ AM_CONDITIONAL([IS_SDXPINN], [test "x$target_sdxpinn" = xyes])
 AM_CONDITIONAL([IS_KALAMA], [test "x$target_kalama" = xyes])
 
 AM_CONDITIONAL([IS_PINEAPPLE], [test "x$target_pineapple" = xyes])
+
+AM_CONDITIONAL([IS_SERAPH], [test "x$target_seraph" = xyes])
 
 AM_CONDITIONAL([IS_QCM2290MTP], [test "x$target_qcm2290mtp" = xyes])
 
@@ -176,6 +184,10 @@ AC_OUTPUT
 
 AM_COND_IF([IS_PINEAPPLE],
         [AC_CONFIG_FILES([wlan_pineapple/Makefile])])
+AC_OUTPUT
+
+AM_COND_IF([IS_SERAPH],
+        [AC_CONFIG_FILES([wlan_seraph/Makefile])])
 AC_OUTPUT
 
 AM_COND_IF([IS_QCM2290MTP],
