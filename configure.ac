@@ -123,6 +123,12 @@ AC_ARG_ENABLE([target-alor],
         [target_alor="${enableval}"],
         target_alor=no)
 
+AC_ARG_ENABLE([target-pebble],
+        AC_HELP_STRING([--enable-target-pebble],
+                [Enable conditional compile for target pebble]),
+        [target_pebble="${enableval}"],
+        target_pebble=no)
+
 AM_CONDITIONAL([IS_MDM9607], [test "x$target_mdm9607" = xyes])
 
 AM_CONDITIONAL([IS_MDMCALIFORNIUM], [test "x$target_mdmcalifornium" = xyes])
@@ -154,6 +160,8 @@ AM_CONDITIONAL([IS_KERA], [test "x$target_kera" = xyes])
 AM_CONDITIONAL([IS_SUN], [test "x$target_sun" = xyes])
 
 AM_CONDITIONAL([IS_ALOR], [test "x$target_alor" = xyes])
+
+AM_CONDITIONAL([IS_PEBBLE], [test "x$target_pebble" = xyes])
 
 AC_CONFIG_FILES([Makefile])
 
@@ -233,6 +241,11 @@ AM_COND_IF([IS_SUN], [
 AM_COND_IF([IS_ALOR], [
         AC_CONFIG_FILES([wlan_alor/Makefile])
         install_dir="wlan_alor"
+])
+
+AM_COND_IF([IS_PEBBLE], [
+        AC_CONFIG_FILES([wlan_pebble/Makefile])
+        install_dir="wlan_pebble"
 ])
 
 # Final output
